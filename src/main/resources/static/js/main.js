@@ -18,8 +18,10 @@ function connectSocket(){
 function handleOutput(data){
     console.log(data);
     let positionData = convertGPRMC(data);
-    console.log(positionData);
-    updateMap(positionData);
+    if (positionData != undefined) {
+        console.log(positionData);
+        updateMap(positionData);
+    }
 }
 function updateMap(newPosition) {
     // Clear existing markers

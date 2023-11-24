@@ -1,5 +1,8 @@
 package ducpa.dttracking.config.mosquitto;
 
+import ducpa.dttracking.entity.DeviceData;
+import ducpa.dttracking.repository.DeviceDataRepository;
+import ducpa.dttracking.service.DeviceDataService;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,10 +32,11 @@ public class MQTTConfigure {
     private String username;
     @Value("${mosquitto.authen.password}")
     private String password;
+    @Value("${mosquitto.clientID}")
+    private String cliendID;
 
     @Autowired
-    SimpMessagingTemplate simpMessagingTemplate;
-
+    private DeviceDataService deviceDataService;
     @Bean
     public MqttPahoClientFactory mqttClientFactory(){
         MqttConnectOptions options = new MqttConnectOptions();
@@ -52,7 +56,7 @@ public class MQTTConfigure {
     }
     @Bean
     MessageProducer inbound(){
-        MqttPahoMessageDrivenChannelAdapter adapter = new MqttPahoMessageDrivenChannelAdapter("serverIn",
+        MqttPahoMessageDrivenChannelAdapter adapter = new MqttPahoMessageDrivenChannelAdapter(cliendID,
                                                             mqttClientFactory(), "#");
         adapter.setCompletionTimeout(5000);
         adapter.setConverter(new DefaultPahoMessageConverter());
@@ -67,9 +71,16 @@ public class MQTTConfigure {
             @Override
             public void handleMessage(Message<?> message) throws MessagingException {
                 String topic = message.getHeaders().get(MqttHeaders.RECEIVED_TOPIC).toString();
-                String destination = "/device/" + topic;
-                simpMessagingTemplate.convertAndSend(destination, message.getPayload());
-                System.out.println(message.getPayload() + " - " +topic);
+                deviceDataService.handleIncomingData(topic, message.getPayload().toString());
+//                String destination = "/device/" + topic;
+//                simpMessagingTemplate.convertAndSend(destination, message.getPayload());
+//
+//                DeviceData deviceData = new DeviceData();
+//                deviceData.setData(message.getPayload().toString());
+//                deviceData.setDeviceId(topic);
+//                deviceDataRepository.save(deviceData);
+//
+//                System.out.println(message.getPayload() + " - " +topic);
             }
         };
     }
