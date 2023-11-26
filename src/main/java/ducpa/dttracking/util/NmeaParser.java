@@ -34,7 +34,11 @@ public class NmeaParser {
         return deviceData;
     }
     private static double convertToDecimal(String coordinate, String direction) {
-        double value = Double.parseDouble(coordinate.substring(0, 2)) + Double.parseDouble(coordinate.substring(2)) / 60.0;
+//        double value = Double.parseDouble(coordinate.substring(0, 2)) + Double.parseDouble(coordinate.substring(2)) / 60.0;
+        double coordinateDouble = Double.parseDouble(coordinate);
+
+        double value = Math.floor(coordinateDouble/100) + (coordinateDouble % 100)/60;
+
         if ("S".equals(direction) || "W".equals(direction)) {
             value = -value;
         }

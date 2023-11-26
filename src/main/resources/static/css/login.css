@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap');
+*{
+    font-family: 'Source Sans Pro', sans-serif;
+    margin: 0;
+    box-sizing: border-box;
+    padding: 0;
+}
+body {
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh;
+}
+#header{
+    max-width: 400px;
+    margin: 0 20px;
+}
+#login-container {
+    backdrop-filter: blur(50px);
+    margin: 0 20px;
+    max-width: 400px;
+    min-height: 400px;
+    background: rgba(255, 255, 255, 0); /* Adjust the transparency here */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+}
+#btn-login{
+    width: 50%;
+    border: .2px solid #ffffff;
+    background: #543f40;
+    margin: 40px auto;
+}
+#btn-login:hover{
+    background-color: #654e4f;
+}
+.form-group{
+    margin: 30px 0;
+}
+form{
+    align-items: center;
+}
+.text-warning{
+    color: #fea25f
+}
+.text-error{
+    color: #ffb302;
+}

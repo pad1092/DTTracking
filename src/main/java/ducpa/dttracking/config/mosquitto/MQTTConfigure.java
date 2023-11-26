@@ -72,15 +72,6 @@ public class MQTTConfigure {
             public void handleMessage(Message<?> message) throws MessagingException {
                 String topic = message.getHeaders().get(MqttHeaders.RECEIVED_TOPIC).toString();
                 deviceDataService.handleIncomingData(topic, message.getPayload().toString());
-//                String destination = "/device/" + topic;
-//                simpMessagingTemplate.convertAndSend(destination, message.getPayload());
-//
-//                DeviceData deviceData = new DeviceData();
-//                deviceData.setData(message.getPayload().toString());
-//                deviceData.setDeviceId(topic);
-//                deviceDataRepository.save(deviceData);
-//
-//                System.out.println(message.getPayload() + " - " +topic);
             }
         };
     }

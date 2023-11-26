@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+
 @Service
 public class DeviceDataService {
     @Autowired
@@ -20,6 +22,10 @@ public class DeviceDataService {
     @Value("${nominatim.osm.url}")
     private String OSM_API;
     public void handleIncomingData(String deviceId, String message){
+        // push data to socket
+        String destination = "/device/" + deviceId;
+        simpMessagingTemplate.convertAndSend(destination, message);
+
         DeviceData deviceData = NmeaParser.parser(message);
         // if data is invalid then return
         if (deviceData == null){
@@ -28,16 +34,20 @@ public class DeviceDataService {
         String url = OSM_API + "lat=" + deviceData.getLatitude() + "&lon=" + deviceData.getLongitude();
         deviceData.setDeviceId(deviceId);
         String newPlaceID = (String) HttpExecutor.sendGetRequest(url, "place_id");
-        String oldPlaceID = DtTrackingApplication.devicePlaceData.get(deviceId);
+        String oldPlaceID = "";
+
+        if (DtTrackingApplication.devicePlaceData == null){
+            DtTrackingApplication.devicePlaceData = new HashMap<>();
+        }
+        if (DtTrackingApplication.devicePlaceData.get(deviceId) != null){
+            oldPlaceID = DtTrackingApplication.devicePlaceData.get(deviceId);
+        }
 
         if (newPlaceID.equalsIgnoreCase(oldPlaceID)){
             return;
         }
 
         DtTrackingApplication.devicePlaceData.put(deviceId, newPlaceID);
-        String destination = "/device/" + deviceId;
-        simpMessagingTemplate.convertAndSend(destination, message);
-
         deviceDataRepository.save(deviceData);
     }
 }
