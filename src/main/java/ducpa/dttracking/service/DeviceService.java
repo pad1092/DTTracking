@@ -70,4 +70,11 @@ public class DeviceService {
 
         deviceRepository.save(device);
     }
+    public List<Device> findByNameContainKey(String key, User user){
+        return deviceRepository.findByNameContainingAndUserDevice(key, user);
+    }
+
+    public List<Device> getAllByUser(User user){
+        return deviceRepository.getAllByUserDevice(user);
+    }
 }

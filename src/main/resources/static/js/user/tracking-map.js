@@ -6,18 +6,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors'
 }).addTo(map);
 
-// Function to generate random positions near a given center point
-function generateNearbyPositions(oldPosition) {
-    var radius = 0.001; // Adjust the radius as needed
-    var latOffset = (Math.random() - 0.5) * 2 * radius;
-    var lonOffset = (Math.random() - 0.5) * 2 * radius;
-
-    var newLat = oldPosition[0] + latOffset;
-    var newLon = oldPosition[1] + lonOffset;
-
-    return [newLat, newLon];
-}
-
 // Function to update the map with nearby positions
 function updateMap(deviceID, newPosition) {
     // Add the new position to the object based on device ID
@@ -64,24 +52,14 @@ function createColoredIcon(color) {
 }
 
 // connect socket
-function connectSocket() {
-    var socket = new SockJS(serverURL + "/websocket");
-    stompClient = Stomp.over(socket);
-    stompClient.debug = null;
-    stompClient.connect({}, function (frame) {
-        stompClient.subscribe("/device/" + deviceID, function (messageOutput) {
-            handleOutput(messageOutput.body);
-        })
-    });
-}
-connectSocket();
 
 function handleOutput(messageOutput) {
+    console.log(messageOutput);
     if(messageOutput == '' || messageOutput == null)
         return;
+    let data = null;
     data = convertGPGGA(messageOutput);
-    console.log(data);
-    updateMap(data);
+    console.log(data==undefined);
 }
 
 function convertGPGGA(gpggaData) {
