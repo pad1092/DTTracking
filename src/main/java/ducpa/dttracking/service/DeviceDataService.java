@@ -1,7 +1,7 @@
 package ducpa.dttracking.service;
 
 import ducpa.dttracking.DtTrackingApplication;
-import ducpa.dttracking.entity.DeviceData;
+import ducpa.dttracking.util.entity.DeviceData;
 import ducpa.dttracking.repository.DeviceDataRepository;
 import ducpa.dttracking.util.HttpExecutor;
 import ducpa.dttracking.util.NmeaParser;

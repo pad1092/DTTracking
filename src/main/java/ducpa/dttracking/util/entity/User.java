@@ -1,8 +1,9 @@
-package ducpa.dttracking.entity;
+package ducpa.dttracking.util.entity;
 
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,4 +21,7 @@ public class User {
     private String fullname;
     private String email;
     private String role;
+
+    @OneToMany(mappedBy = "userDevice", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Device> userDevices;
 }

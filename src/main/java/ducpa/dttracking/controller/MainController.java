@@ -1,12 +1,10 @@
 package ducpa.dttracking.controller;
 
-import ducpa.dttracking.entity.User;
+import ducpa.dttracking.util.entity.User;
 import ducpa.dttracking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -42,9 +40,9 @@ public class MainController {
                 String role = authority.getAuthority();
                 System.out.println(role);
                 if (role.equals("ROLE_USER"))
-                    return "user-home";
+                    return "redirect:/users/devices";
                 if (role.equals("ROLE_ADMIN"))
-                    return "admin-home";
+                    return "redirect:/managers/users";
             }
             return "Your response based on roles";
         } else {

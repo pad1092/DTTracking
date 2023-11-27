@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Quản lý thiết bị</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/user/devices.css}">
+    <link rel="shortcut icon" th:href="@{/images/logo.png}" type="image/x-icon">
+</head>
+
+<body>
+<div id="header" class="header">
+    <div class="header-wrapper">
+        <div class="navbar">
+            <div class="header-left h-100">
+                <a href="/home" class="d-block h-100">
+                    <h4 class="m-0 f-w-bold">DTTRACKING</h4>
+                </a>
+            </div>
+            <div class="header-right flex-1">
+                <ul class="header-right-link">
+                    <li class="mx-2 list-unstyled d-inline-block nav-item active">
+                        <a th:href="@{/users/devices}" class="nav-link">
+                            <i class="fa-solid fa-walkie-talkie mr-1"></i>
+                            Quản lý thiết bị
+                        </a>
+                    </li>
+                    <li class="mx-2 list-unstyled d-inline-block nav-item">
+                        <a th:href="@{/users/tracking}" class="nav-link text-center d-block">
+                            <i class="fa-solid fa-location-crosshairs mr-1"></i>
+                            Theo dõi</a>
+                    </li>
+                    <li class="mx-2 list-unstyled d-inline-block nav-item">
+                        <a th:href="@{/users/notification}" class="nav-link">
+                            <i class="fa-regular fa-bell mr-1"></i>
+                            Quản lý thông báo
+                        </a>
+                    </li>
+                    <li class="mx-2 list-unstyled d-inline-block nav-item">
+                        <a th:href="@{/users/route}" class="nav-link">
+                            <i class="fa-solid fa-route mr-1"></i>
+                            Lộ trình
+                        </a>
+                    </li>
+                </ul>
+                <div class="nav-toggle-btn action-btn" onclick="toggleDropdownMenu()" id="toggle-menu-btn">
+                    <i class="fa-solid fa-bars" style="color: #232424;"></i>
+                </div>
+            </div>
+            <a th:href="@{/users/profile}">
+                <div class="header-user">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+            </a>
+        </div>
+        <div class="drop-down-menu">
+            <li class="mx-2 list-unstyled d-inline-block nav-item active">
+                <a th:href="@{/users/devices}" class="nav-link">
+                    <i class="fa-solid fa-walkie-talkie mr-1"></i>
+                    Quản lý thiết bị
+                </a>
+            </li>
+            <li class="mx-2 list-unstyled d-inline-block nav-item">
+                <a th:href="@{users/tracking}" class="nav-link text-center d-block">
+                    <i class="fa-solid fa-location-crosshairs mr-1"></i>
+                    Theo dõi</a>
+            </li>
+            <li class="mx-2 list-unstyled d-inline-block nav-item">
+                <a th:href="@{/users/notification}" class="nav-link">
+                    <i class="fa-regular fa-bell mr-1"></i>
+                    Quản lý thông báo
+                </a>
+            </li>
+            <li class="mx-2 list-unstyled d-inline-block nav-item">
+                <a th:href="@{users/route}" class="nav-link">
+                    <i class="fa-solid fa-route mr-1"></i>
+                    Lộ trình
+                </a>
+            </li>
+            <li class="mx-2 list-unstyled d-inline-block nav-item">
+                <a th:href="@{/users/profile}" class="nav-link">Tài khoản</a>
+            </li>
+        </div>
+    </div>
+</div>
+<div class="body-wrapper">
+    <h6 class="pt-5 text-uppercase f-w-bold text-center text-navy" style="width: max-content;">
+        Quản lý thiết bị
+        <i class="fa-solid fa-chevron-right mx-2" style="font-size: 12px;"></i>
+        Danh sách
+    </h6>
+    <div class="btn btn-success mt-3 " id="add-btn">Thiết bị mới</div>
+    <div id="list-device" class="mt-4" style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;">
+        <table class="table table-hover border table-responsive-xl text-center" id="tbl-devices">
+            <thead>
+            <tr>
+                <th scope="col" class="col-2">STT</th>
+                <th scope="col" class="col-2">ID</th>
+                <th scope="col" class="col-2">Tên</th>
+                <th scope="col" class="col-2">Mô tả</th>
+                <th scope="col" class="col-2">Ngày kích hoạt</th>
+                <th scope="col" class="col-2">Hành động</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Dynamic Table -->
+            </tbody>
+        </table>
+        <!-- Delete Confirmation Modal -->
+        <div class="modal" tabindex="-1" role="dialog" id="deleteConfirmModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm Delete</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Bạn có chắc chắn muốn xóa không?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Xóa</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Device Modal -->
+        <div class="modal" tabindex="-1" role="dialog" id="editDeviceModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-brown">
+                        <h5 class="modal-title text-light">Sửa thông tin</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editDeviceForm">
+                            <div class="form-group">
+                                <label for="editDeviceId">ID:</label>
+                                <input type="text" class="form-control" id="editDeviceId" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="editDeviceName">Tên thiết bị:</label>
+                                <input type="text" class="form-control" id="editDeviceName">
+                            </div>
+                            <div class="form-group">
+                                <label for="editDeviceDescription">Mô tả:</label>
+                                <input type="text" class="form-control" id="editDeviceDescription">
+                            </div>
+                            <div class="form-group">
+                                <label for="editDeviceActiveDate">Active Date:</label>
+                                <input type="text" class="form-control" id="editDeviceActiveDate" readonly>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-primary" id="saveEditBtn">Lưu</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Device Modal -->
+        <div class="modal" tabindex="-1" role="dialog" id="addDeviceModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-brown">
+                        <h5 class="modal-title text-white">Kích hoạt thiết bị mới</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <button type="button" class="btn btn-outline-primary btn-sm mb-2" id="upload-excel">Tải lên file Excel</button>
+                        <form id="addDeviceForm">
+                            <div class="form-group">
+                                <label for="addDeviceId">Mã ID trên thiết bị:</label>
+                                <input type="text" class="form-control" id="addDeviceId">
+                            </div>
+                            <div class="form-group">
+                                <label for="addDeviceName">Tên thiết bị:</label>
+                                <input type="text" class="form-control" id="addDeviceName">
+                            </div>
+                            <div class="form-group">
+                                <label for="addDeviceDescription">Mô tả:</label>
+                                <input type="text" class="form-control" id="addDeviceDescription">
+                            </div>
+                            <span id="msg-response" class="text-danger"></span>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-primary" id="saveAddBtn">Kích hoạt</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload Excel Modal -->
+        <div class="modal fade" tabindex="-1" role="dialog" id="uploadExcelModal">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-brown text-white">
+                        <h5 class="modal-title">Kích hoạt hàng loạt</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="uploadExcelForm">
+                            <div class="form-group">
+                                <label for="excelFile">Chọn file excel:</label>
+                                <input type="file" class="form-control-file" id="excelFile" accept=".xlsx">
+                            </div>
+                        </form>
+                        <div id="uploadError" class="text-danger"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-primary" id="processExcelBtn">Kích hoạt</button>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+<!-- <div class="py-3" id="footer">
+    <div class="footer-wrapper">
+    </div>
+</div> -->
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+<script th:src="@{/js/main.js}"></script>
+<script th:src="@{/js/user/devices.js}"></script>
+</body>
+
+</html>

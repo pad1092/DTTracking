@@ -1,68 +1,50 @@
-let deviceID = "0001";
-var map = L.map('map').setView([21.0114975, 105.779181], 15);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
-}).addTo(map);
+const PRINT = function(str){console.log(str)}
+$(document).ready(function () {
+  setButtonsEvent();
+  smoothScroll();
+})
 
-connectSocket();
-function connectSocket(){
-    var socket = new SockJS("/DTTracking/gps-socket");
-    stompClient = Stomp.over(socket);
-    stompClient.debug = null;
-    stompClient.connect({}, function (frame){
-        stompClient.subscribe("/device/" + deviceID, function (messageOutput){
-            handleOutput (messageOutput.body);
-        })
-    });
-}
-function handleOutput(data){
-    console.log(data);
-    let positionData = convertGPRMC(data);
-    if (positionData != undefined) {
-        console.log(positionData);
-        updateMap(positionData);
+function setButtonsEvent() {
+  let searchModal = $('.robusta-search');
+
+  $('#search-btn').click(function(){
+    searchModal.removeClass('close');
+    searchModal.addClass('open');
+  })
+
+  window.onclick = function(event) {
+    if (event.target == searchModal[0]){
+      searchModal.removeClass('open');
+      searchModal.addClass('close');
     }
+  }
 }
-function updateMap(newPosition) {
-    // Clear existing markers
-    map.eachLayer(function (layer) {
-        if (layer instanceof L.Marker) {
-            map.removeLayer(layer);
-        }
+
+function toggleDropdownMenu() {
+  $('.drop-down-menu').toggleClass('open')
+}
+function smoothScroll(){
+  document.addEventListener('DOMContentLoaded', function() {
+    var scrollLinks = document.querySelectorAll('a[href^="#"]');
+    
+    scrollLinks.forEach(function(link) {
+        link.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent the default behavior of the link
+            
+            var targetId = link.getAttribute('href'); // Get the target ID from the link's href
+            var targetElement = document.querySelector(targetId);
+            
+            if (targetElement) {
+                // Calculate the scroll position to the target element
+                var scrollToPosition = targetElement.offsetTop;
+                
+                // Scroll to the calculated position
+                window.scrollTo({
+                    top: scrollToPosition,
+                    behavior: 'smooth' // Use smooth scrolling behavior
+                });
+            }
+        });
     });
-
-    // Add a marker to the map
-    L.marker(newPosition).addTo(map);
-
-    // Set the map view to the new position
-    map.setView(newPosition, map.getZoom());
-}
-
-function convertGPRMC(gprmcData) {
-    var gprmcComponents = gprmcData.split(',');
-    // Check if latitude and longitude fields are not empty
-    if (gprmcComponents[3] == null || gprmcComponents[3] == '' || gprmcComponents[3] == undefined)
-        return;
-
-    var latitude = parseFloat(gprmcComponents[3]);
-    var latitudeDirection = gprmcComponents[4];
-    var longitude = parseFloat(gprmcComponents[5]);
-    var decimalLatitude = convertDegreesMinutesToDecimal(latitude, latitudeDirection);
-    var decimalLongitude = convertDegreesMinutesToDecimal(longitude, gprmcComponents[6]);
-
-    return [decimalLatitude, decimalLongitude];
-
-}
-
-function convertDegreesMinutesToDecimal(coordinate, direction) {
-    var degrees = Math.floor(coordinate / 100);
-    var minutes = coordinate % 100;
-
-    var decimalDegrees = degrees + (minutes / 60);
-
-    if (direction === 'S' || direction === 'W') {
-        decimalDegrees = -decimalDegrees;
-    }
-
-    return decimalDegrees;
+});
 }

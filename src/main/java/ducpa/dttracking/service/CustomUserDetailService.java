@@ -1,6 +1,7 @@
 package ducpa.dttracking.service;
 
 import ducpa.dttracking.repository.UserRepository;
+import ducpa.dttracking.util.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,7 +21,7 @@ public class CustomUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        ducpa.dttracking.entity.User user = userRepository.findByPhone(username);
+        User user = userRepository.findByPhone(username);
         if (user == null) {
             throw new UsernameNotFoundException("Khong tim thay tai khoan");
         }

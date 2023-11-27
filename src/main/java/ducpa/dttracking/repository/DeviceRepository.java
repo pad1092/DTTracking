@@ -1,9 +1,10 @@
 package ducpa.dttracking.repository;
 
-import ducpa.dttracking.util.entity.DeviceData;
+import ducpa.dttracking.util.entity.Device;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface DeviceDataRepository extends JpaRepository<DeviceData, Long> {
+public interface DeviceRepository extends JpaRepository<Device, String> {
+    Device getDeviceById(String id);
 }

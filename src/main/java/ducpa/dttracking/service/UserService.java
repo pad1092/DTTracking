@@ -1,13 +1,14 @@
 package ducpa.dttracking.service;
 
-import com.google.gson.JsonObject;
-import ducpa.dttracking.entity.User;
+import ducpa.dttracking.util.entity.Device;
+import ducpa.dttracking.util.entity.User;
 import ducpa.dttracking.repository.UserRepository;
-import ducpa.dttracking.restcontroller.UserRestController;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserService {
@@ -15,6 +16,8 @@ public class UserService {
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private UtilService utilService;
 
     public void saveUser(User user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -36,4 +39,11 @@ public class UserService {
         jsonObject.put("phone", checkPhone);
         return jsonObject;
     }
+
+    public List<Device> getListDeviceOfUser(User user){
+        List<Device> devices = user.getUserDevices();
+        devices.forEach(device -> {device.setUserDevice(null);});
+        return devices;
+    }
+
 }

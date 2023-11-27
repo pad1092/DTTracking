@@ -1,9 +1,6 @@
 package ducpa.dttracking.util;
 
-import ducpa.dttracking.entity.DeviceData;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import ducpa.dttracking.util.entity.DeviceData;
 
 public class NmeaParser {
     public static DeviceData parser(String message){
