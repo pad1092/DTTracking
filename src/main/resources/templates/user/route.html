@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <title>Lộ trình</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/user/tracking.css}">
+    <link rel="shortcut icon" th:href="@{/images/logo.png}" type="image/x-icon">
+</head>
+
+<body>
+<div id="header" class="header">
+    <div class="header-wrapper">
+        <div class="navbar">
+            <div class="header-left h-100">
+                <a href="/home" class="d-block h-100">
+                    <h4 class="m-0 f-w-bold">DTTRACKING</h4>
+                </a>
+            </div>
+            <div class="header-right flex-1">
+                <ul class="header-right-link">
+                    <li class="mx-2 list-unstyled d-inline-block nav-item ">
+                        <a th:href="@{/users/devices}" class="nav-link">
+                            <i class="fa-solid fa-walkie-talkie mr-1"></i>
+                            Quản lý thiết bị
+                        </a>
+                    </li>
+                    <li class="mx-2 list-unstyled d-inline-block nav-item">
+                        <a th:href="@{/users/tracking}" class="nav-link text-center d-block">
+                            <i class="fa-solid fa-location-crosshairs mr-1"></i>
+                            Theo dõi</a>
+                    </li>
+                    <li class="mx-2 list-unstyled d-inline-block nav-item">
+                        <a th:href="@{/users/notification}" class="nav-link">
+                            <i class="fa-regular fa-bell mr-1"></i>
+                            Quản lý thông báo
+                        </a>
+                    </li>
+                    <li class="mx-2 list-unstyled d-inline-block nav-item active">
+                        <a th:href="@{/users/route}" class="nav-link">
+                            <i class="fa-solid fa-route mr-1"></i>
+                            Lộ trình
+                        </a>
+                    </li>
+                </ul>
+                <div class="nav-toggle-btn action-btn" onclick="toggleDropdownMenu()" id="toggle-menu-btn">
+                    <i class="fa-solid fa-bars" style="color: #232424;"></i>
+                </div>
+            </div>
+            <a href="/users/profile">
+                <div class="header-user">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+            </a>
+        </div>
+        <div class="drop-down-menu">
+            <li class="mx-2 list-unstyled d-inline-block nav-item ">
+                <a th:href="@{/users/devices}" class="nav-link">
+                    <i class="fa-solid fa-walkie-talkie mr-1"></i>
+                    Quản lý thiết bị
+                </a>
+            </li>
+            <li class="mx-2 list-unstyled d-inline-block nav-item ">
+                <a th:href="@{/users/tracking}" class="nav-link text-center d-block">
+                    <i class="fa-solid fa-location-crosshairs mr-1"></i>
+                    Theo dõi</a>
+            </li>
+            <li class="mx-2 list-unstyled d-inline-block nav-item">
+                <a th:href="@{/users/notification}" class="nav-link">
+                    <i class="fa-regular fa-bell mr-1"></i>
+                    Quản lý thông báo
+                </a>
+            </li>
+            <li class="mx-2 list-unstyled d-inline-block nav-item active">
+                <a th:href="@{/users/route}" class="nav-link">
+                    <i class="fa-solid fa-route mr-1"></i>
+                    Lộ trình
+                </a>
+            </li>
+            <li class="mx-2 list-unstyled d-inline-block nav-item">
+                <a th:href="@{/users/profile}" class="nav-link">Tài khoản</a>
+            </li>
+        </div>
+    </div>
+</div>
+<div class="body-wrapper">
+    <h6 class="pt-5 text-uppercase f-w-bold text-center text-navy" style="width: max-content;">
+        Lộ trình
+        <i class="fa-solid fa-chevron-right mx-2" style="font-size: 12px;"></i>
+        Lịch sử di chuyển
+    </h6>
+    <div class="">
+        <div class="d-inline-block">
+            <span>Chọn thiết bị</span>
+            <div class=" d-inline-block mx-2 border " id="input-wrapper">
+                <input placeholder="Chọn danh sách thiết bị" id="input-deviceID" type="text" class="form-control p-0 px-2 d-inline-block " onchange="inputChange(this)">
+                <div id="toggle-selection" class="d-inline-block text-center" style="width: 20px;" onclick="toggleSelection()">
+                    <i class="fa-solid fa-chevron-right " id="input-icon"></i>
+                </div>
+            </div>
+        </div>
+        <div class="my-2">
+            <span class=" d-inline-block" style="opacity: 0;">Chọn thiết bị</span>
+            <select name="" id="history-type" class="form form-control d-inline-block ml-2" style="width: 200px;">
+                <option value="-1" selected>Chọn thời gian</option>
+                <option value="1">Hôm nay</option>
+                <option value="2">Hôm qua</option>
+            </select>
+        </div>
+        <div class="">
+            <div style="width: 200px; margin-left: 100px;" class=" d-inline-block btn btn-sm d-block p-0 h-100 btn-outline-primary px-1 py-2 mb-1" onclick="viewHistory()">Xem</div>
+        </div>
+        <div id="select-wrapper" class="" style="display: none;">
+            <span style="opacity: 0;">Chọn thiết bị</span>
+            <ul id="list-result" class="d-inline-block mx-2 mt-2 ">
+                <!--        <li deviceID="0001" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>-->
+                <!--        <li deviceID="0002" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>-->
+                <!--        <li deviceID="0003" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>-->
+                <!--        <li deviceID="0004" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>-->
+            </ul>
+        </div>
+        <span class="d-block f-w-bold" id="device-watching"></span>
+    </div>
+    <div id="map" class="my-4"></div>
+</div>
+<!-- <div class="py-3" id="footer">
+    <div class="footer-wrapper">
+    </div>
+</div> -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"
+        integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.js"
+        integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"
+        integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script th:src="@{/js/main.js}"></script>
+<script th:src="@{/js/user/tracking.js}"></script>
+<script th:src="@{/js/user/tracking-map.js}"></script>
+</body>
+
+</html>

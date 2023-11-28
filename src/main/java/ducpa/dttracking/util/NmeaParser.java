@@ -1,6 +1,6 @@
 package ducpa.dttracking.util;
 
-import ducpa.dttracking.util.entity.DeviceData;
+import ducpa.dttracking.entity.DeviceData;
 
 public class NmeaParser {
     public static DeviceData parser(String message){

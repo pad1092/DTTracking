@@ -1,7 +1,7 @@
 package ducpa.dttracking.restcontroller;
 
-import ducpa.dttracking.util.entity.Device;
-import ducpa.dttracking.util.entity.User;
+import ducpa.dttracking.entity.Device;
+import ducpa.dttracking.entity.User;
 import ducpa.dttracking.service.DeviceService;
 import ducpa.dttracking.service.UserService;
 import ducpa.dttracking.service.UtilService;
@@ -15,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "*")
 public class UserRestController {
     @Autowired
     private UserService userService;
@@ -23,9 +24,8 @@ public class UserRestController {
     @Autowired
     private DeviceService deviceService;
 
-    @GetMapping("/users/exits")
+    @GetMapping("/exits")
     public ResponseEntity<?> checkExit(@RequestParam String phone, @RequestParam String email){
-        System.out.print(phone);
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
                 .body(userService.checkExit(phone, email).toString());
     }

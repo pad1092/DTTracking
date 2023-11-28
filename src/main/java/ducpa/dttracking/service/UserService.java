@@ -1,7 +1,7 @@
 package ducpa.dttracking.service;
 
-import ducpa.dttracking.util.entity.Device;
-import ducpa.dttracking.util.entity.User;
+import ducpa.dttracking.entity.Device;
+import ducpa.dttracking.entity.User;
 import ducpa.dttracking.repository.UserRepository;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package ducpa.dttracking.service;
 
-import ducpa.dttracking.util.entity.User;
+import ducpa.dttracking.entity.User;
 import ducpa.dttracking.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

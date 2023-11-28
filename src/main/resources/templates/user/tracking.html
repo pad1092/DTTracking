@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
   <title>Theo dõi</title>
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
@@ -35,7 +36,7 @@
             </a>
           </li>
           <li class="mx-2 list-unstyled d-inline-block nav-item active">
-            <a th:href="@{users/tracking}" class="nav-link text-center d-block">
+            <a th:href="@{/users/tracking}" class="nav-link text-center d-block">
               <i class="fa-solid fa-location-crosshairs mr-1"></i>
               Theo dõi</a>
           </li>
@@ -46,7 +47,7 @@
             </a>
           </li>
           <li class="mx-2 list-unstyled d-inline-block nav-item">
-            <a th:href="@{users/route}" class="nav-link">
+            <a th:href="@{/users/route}" class="nav-link">
               <i class="fa-solid fa-route mr-1"></i>
               Lộ trình
             </a>

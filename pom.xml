@@ -10,7 +10,7 @@
     </parent>
     <groupId>ducpa</groupId>
     <artifactId>DTTracking</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>-</version>
     <packaging>war</packaging>
     <name>DTTracking</name>
     <description>DTTracking</description>

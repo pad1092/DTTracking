@@ -2,19 +2,17 @@ package ducpa.dttracking.restcontroller;
 
 import ducpa.dttracking.service.DeviceService;
 import ducpa.dttracking.service.UtilService;
-import ducpa.dttracking.util.entity.Device;
-import ducpa.dttracking.util.entity.User;
+import ducpa.dttracking.entity.Device;
+import ducpa.dttracking.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "*")
 public class DeviceRestController {
     @Autowired
     private DeviceService deviceService;

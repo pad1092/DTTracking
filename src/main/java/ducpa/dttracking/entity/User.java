@@ -1,4 +1,4 @@
-package ducpa.dttracking.util.entity;
+package ducpa.dttracking.entity;
 
 import lombok.*;
 

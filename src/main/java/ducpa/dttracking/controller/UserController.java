@@ -16,4 +16,8 @@ public class UserController {
     public String userTracking(){
         return "user/tracking";
     }
+    @GetMapping("/users/route")
+    public String userRoute(){
+        return "user/route";
+    }
 }
