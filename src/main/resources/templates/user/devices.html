@@ -22,7 +22,7 @@
     <div class="header-wrapper">
         <div class="navbar">
             <div class="header-left h-100">
-                <a href="/home" class="d-block h-100">
+                <a th:href="@{/home}" class="d-block h-100">
                     <h4 class="m-0 f-w-bold">DTTRACKING</h4>
                 </a>
             </div>
@@ -70,7 +70,7 @@
                 </a>
             </li>
             <li class="mx-2 list-unstyled d-inline-block nav-item">
-                <a th:href="@{users/tracking}" class="nav-link text-center d-block">
+                <a th:href="@{/users/tracking}" class="nav-link text-center d-block">
                     <i class="fa-solid fa-location-crosshairs mr-1"></i>
                     Theo dõi</a>
             </li>
@@ -93,12 +93,12 @@
     </div>
 </div>
 <div class="body-wrapper">
-    <h6 class="pt-5 text-uppercase f-w-bold text-center text-navy" style="width: max-content;">
+    <h6 class="pt-5 text-uppercase f-w-bold text-center text-navy mb-4" style="width: max-content;">
         Quản lý thiết bị
         <i class="fa-solid fa-chevron-right mx-2" style="font-size: 12px;"></i>
         Danh sách
     </h6>
-    <div class="btn btn-success mt-3 " id="add-btn">Thiết bị mới</div>
+    <div class="btn btn-success" id="add-btn">Thiết bị mới</div>
     <div id="list-device" class="mt-4" style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;">
         <table class="table table-hover border table-responsive-xl text-center" id="tbl-devices">
             <thead>

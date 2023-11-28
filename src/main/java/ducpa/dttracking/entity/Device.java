@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -24,4 +25,7 @@ public class Device {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private User userDevice;
+
+    @OneToMany(mappedBy = "device", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<RouteHistory> routeHistories;
 }

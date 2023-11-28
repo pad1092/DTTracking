@@ -1,6 +1,6 @@
 
 #input-wrapper{
-    width: 200px; 
+    width: 200px;
     font-size: 14px;
     border-radius: 2px;
     display: flex;
@@ -20,11 +20,12 @@
 #list-result{
     transition: .3s;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-    width: 200px; 
-    font-size: 14px; 
-    height: 200px; 
+    width: 200px;
+    font-size: 14px;
+    max-height: 200px;
     overflow-y: scroll;
     border: 1px solid #cccccc;
+    display: inline-block;
 }
 .resule-item{
     cursor: pointer;
@@ -52,4 +53,24 @@
 }
 .leaflet-control-attribution{
     display: none !important;
+}
+.btn{
+    border-color: var(--text-primary) !important;
+    color: var(--text-primary) !important;
+}
+@media only screen and (max-width: 500px) {
+
+    .wr-f-500{
+        display: block !important;
+    }
+
+    .f-500{
+        margin-left:0 !important;
+        width: 100% !important;
+    }
+
+    .btn{
+        height: 40px !important;
+    }
+
 }

@@ -14,4 +14,6 @@ public interface DeviceRepository extends JpaRepository<Device, String> {
     List<Device> findByNameContainingAndUserDevice(String key, User user);
 
     List<Device> getAllByUserDevice(User user);
+
+    Device findByUserDeviceAndId(User user, String id);
 }

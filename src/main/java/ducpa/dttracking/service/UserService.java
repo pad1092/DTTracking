@@ -40,9 +40,12 @@ public class UserService {
         return jsonObject;
     }
 
-    public List<Device> getListDeviceOfUser(User user){
+    public List<Device> getListDeviceOfUser(User user) {
         List<Device> devices = user.getUserDevices();
-        devices.forEach(device -> {device.setUserDevice(null);});
+        devices.forEach(device -> {
+            device.setUserDevice(null);
+            device.setRouteHistories(null);
+        });
         return devices;
     }
 

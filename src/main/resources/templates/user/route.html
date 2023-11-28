@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" th:href="@{/css/common.css}">
     <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/date-picker.css}">
     <link rel="stylesheet" th:href="@{/css/user/tracking.css}">
     <link rel="shortcut icon" th:href="@{/images/logo.png}" type="image/x-icon">
 </head>
@@ -23,7 +24,7 @@
     <div class="header-wrapper">
         <div class="navbar">
             <div class="header-left h-100">
-                <a href="/home" class="d-block h-100">
+                <a th:href="@{/home}" class="d-block h-100">
                     <h4 class="m-0 f-w-bold">DTTRACKING</h4>
                 </a>
             </div>
@@ -94,41 +95,30 @@
     </div>
 </div>
 <div class="body-wrapper">
-    <h6 class="pt-5 text-uppercase f-w-bold text-center text-navy" style="width: max-content;">
+    <h6 class="pt-5 text-uppercase f-w-bold text-center text-navy mb-4" style="width: max-content;">
         Lộ trình
         <i class="fa-solid fa-chevron-right mx-2" style="font-size: 12px;"></i>
         Lịch sử di chuyển
     </h6>
-    <div class="">
-        <div class="d-inline-block">
-            <span>Chọn thiết bị</span>
-            <div class=" d-inline-block mx-2 border " id="input-wrapper">
-                <input placeholder="Chọn danh sách thiết bị" id="input-deviceID" type="text" class="form-control p-0 px-2 d-inline-block " onchange="inputChange(this)">
-                <div id="toggle-selection" class="d-inline-block text-center" style="width: 20px;" onclick="toggleSelection()">
-                    <i class="fa-solid fa-chevron-right " id="input-icon"></i>
-                </div>
-            </div>
-        </div>
-        <div class="my-2">
-            <span class=" d-inline-block" style="opacity: 0;">Chọn thiết bị</span>
-            <select name="" id="history-type" class="form form-control d-inline-block ml-2" style="width: 200px;">
-                <option value="-1" selected>Chọn thời gian</option>
-                <option value="1">Hôm nay</option>
-                <option value="2">Hôm qua</option>
-            </select>
-        </div>
-        <div class="">
-            <div style="width: 200px; margin-left: 100px;" class=" d-inline-block btn btn-sm d-block p-0 h-100 btn-outline-primary px-1 py-2 mb-1" onclick="viewHistory()">Xem</div>
-        </div>
+    <div class="wr-f-500" style="display:flex">
+
+        <select name="" id="device-section" class="form form-control d-inline-block f-500" style="width: max-content; margin-bottom: 10px;">
+            <option value="-1" selected>Chọn danh sách thiết bị</option>
+<!--            <option value="1">Arduino</option>-->
+<!--            <option value="2">Motorbike</option>-->
+        </select>
+        <input placeholder="Chọn thời gian" id="time-selection" class="form form-control d-inline-block f-500" style="width: max-content; margin-left: 10px; margin-bottom: 10px;">
+
+        <button class="btn f-500 btn-outline btn f-500 btn-outline-primary mb-3 ml-2" onclick="viewHistory()">Xem</button>
         <div id="select-wrapper" class="" style="display: none;">
-            <span style="opacity: 0;">Chọn thiết bị</span>
-            <ul id="list-result" class="d-inline-block mx-2 mt-2 ">
+            <ul id="list-result" class="d-inline-block mt-2 ">
                 <!--        <li deviceID="0001" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>-->
                 <!--        <li deviceID="0002" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>-->
                 <!--        <li deviceID="0003" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>-->
                 <!--        <li deviceID="0004" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>-->
             </ul>
         </div>
+        <span id="d-block response-msg" class="text-warning"></span>
         <span class="d-block f-w-bold" id="device-watching"></span>
     </div>
     <div id="map" class="my-4"></div>
@@ -147,7 +137,8 @@
         integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script th:src="@{/js/main.js}"></script>
-<script th:src="@{/js/user/tracking.js}"></script>
+<script th:src="@{/js/date-picker.js}"></script>
+<script th:src="@{/js/user/route.js}"></script>
 <script th:src="@{/js/user/tracking-map.js}"></script>
 </body>
 

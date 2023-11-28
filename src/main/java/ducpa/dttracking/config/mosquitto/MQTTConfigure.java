@@ -1,6 +1,6 @@
 package ducpa.dttracking.config.mosquitto;
 
-import ducpa.dttracking.service.DeviceDataService;
+import ducpa.dttracking.service.RouteHistoryDataService;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,7 +32,7 @@ public class MQTTConfigure {
     private String cliendID;
 
     @Autowired
-    private DeviceDataService deviceDataService;
+    private RouteHistoryDataService routeHistoryDataService;
     @Bean
     public MqttPahoClientFactory mqttClientFactory(){
         MqttConnectOptions options = new MqttConnectOptions();
@@ -67,7 +67,7 @@ public class MQTTConfigure {
             @Override
             public void handleMessage(Message<?> message) throws MessagingException {
                 String topic = message.getHeaders().get(MqttHeaders.RECEIVED_TOPIC).toString();
-                deviceDataService.handleIncomingData(topic, message.getPayload().toString());
+                routeHistoryDataService.handleIncomingData(topic, message.getPayload().toString());
             }
         };
     }
