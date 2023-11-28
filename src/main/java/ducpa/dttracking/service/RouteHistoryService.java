@@ -33,11 +33,14 @@ public class RouteHistoryService {
             return null;
         }
         Date date = new Date(dateTimestamp);
+        System.out.println("DUCPA Timestamp: " + dateTimestamp);
+        System.out.println("DUCPA date: " + date);
         List<RouteHistory> routeHistories = routeHistoryRepository.findAllByDeviceAndDate(device, date);
         routeHistories.forEach(routeHistory -> {
             routeHistory.setDevice(null);
             routeHistory.getRouteHistoryData().forEach(routeHistoryData -> {routeHistoryData.setRouteHistory(null);});
         });
+        System.out.println("DUCPA routeHistories's size: " + routeHistories.size());
         return routeHistories;
     }
 }
