@@ -6,7 +6,10 @@ import ducpa.dttracking.entity.User;
 import ducpa.dttracking.repository.DeviceRepository;
 import ducpa.dttracking.repository.RouteHistoryRepository;
 import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,8 +35,11 @@ public class RouteHistoryService {
         if (device == null){
             return null;
         }
-        Date date = new Date(dateTimestamp);
-        System.out.println("DUCPA Timestamp: " + dateTimestamp);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT+7"));
+        String formattedDate = sdf.format(new Date(dateTimestamp));
+        java.sql.Date date = java.sql.Date.valueOf(formattedDate);
+        System.out.println("DUCPA Timestamp: " + date.getTime());
         System.out.println("DUCPA date: " + date);
         List<RouteHistory> routeHistories = routeHistoryRepository.findAllByDeviceAndDate(device, date);
         routeHistories.forEach(routeHistory -> {

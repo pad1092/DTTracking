@@ -38,7 +38,8 @@ public class RouteHistoryDataService {
             DtTrackingApplication.devicePlaceData = new HashMap<>();
         JSONObject historyData = (JSONObject)DtTrackingApplication.devicePlaceData.get(deviceId);
         if (DtTrackingApplication.devicePlaceData.get(deviceId) != null) {
-            String url = this.OSM_API + "lat=" + this.OSM_API + "&lon=" + routeHistoryData.getLatitude();
+            String url = this.OSM_API + "lat=" + routeHistoryData.getLatitude() + "&lon=" + routeHistoryData.getLongitude();
+            System.out.println("DUCPA: URL OSM API: " + url);
             String currentPlaceID = (String)HttpExecutor.sendGetRequest(url, "place_id");
             Long lastTimeUpdated = (Long)historyData.get("timeUpdated");
             String lastPlaceID = (String)historyData.get("placeID");

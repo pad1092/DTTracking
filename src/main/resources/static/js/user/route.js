@@ -97,12 +97,17 @@ function makePopUpContent(timeStrings){
     const maxTime = new Date(Math.max(...timeObjects));
 
     const pad = (num) => num.toString().padStart(2, '0');
-    const formatTime = (time) => `${pad(time.getHours())}:${pad(time.getMinutes())}:${pad(time.getSeconds())}`;
+    const formatTime = (time) => `${pad(time.getHours())}h${pad(time.getMinutes())}`;
 
     const minTimeFormatted = formatTime(minTime);
     const maxTimeFormatted = formatTime(maxTime);
 
-    let output = `Từ ${minTimeFormatted} đến ${maxTimeFormatted}`;
-    console.log(output);
+    const timeDifferenceInMinutes = Math.floor((maxTime - minTime) / (1000 * 60));
+    const hours = Math.floor(timeDifferenceInMinutes / 60);
+    const remainingMinutes = timeDifferenceInMinutes % 60;
+
+    let timeBetween = `Từ <b>${minTimeFormatted}</b> đến <b>${maxTimeFormatted}</b>`;
+    const timeDifferenceFormatted = hours > 0 ? `${hours}giờ ${pad(remainingMinutes)} phút` : `${remainingMinutes} phút`;
+    let output = `- Thời gian di chuyển: <b>${timeDifferenceFormatted}</b> <br>- ${timeBetween}`
     return output;
 }
