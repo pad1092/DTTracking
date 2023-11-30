@@ -39,7 +39,6 @@ public class RouteHistoryDataService {
         JSONObject historyData = (JSONObject)DtTrackingApplication.devicePlaceData.get(deviceId);
         if (DtTrackingApplication.devicePlaceData.get(deviceId) != null) {
             String url = this.OSM_API + "lat=" + routeHistoryData.getLatitude() + "&lon=" + routeHistoryData.getLongitude();
-            System.out.println("DUCPA: URL OSM API: " + url);
             String currentPlaceID = (String)HttpExecutor.sendGetRequest(url, "place_id");
             Long lastTimeUpdated = (Long)historyData.get("timeUpdated");
             String lastPlaceID = (String)historyData.get("placeID");
@@ -53,12 +52,16 @@ public class RouteHistoryDataService {
             historyData.put("timeUpdated", System.currentTimeMillis());
             historyData.put("route", updatedRoute);
             historyData.put("placeID", currentPlaceID);
+            historyData.put("longitude", routeHistoryData.getLongitude());
+            historyData.put("latitude", routeHistoryData.getLatitude());
         } else {
             JSONObject newData = new JSONObject();
             newData.put("timeUpdated", System.currentTimeMillis());
             RouteHistory routeHistory = this.routeHistoryService.createAndSaveNewRoute(deviceId);
             newData.put("route", routeHistory);
             newData.put("placeID", "");
+            newData.put("longitude", routeHistoryData.getLongitude());
+            newData.put("latitude", routeHistoryData.getLatitude());
             DtTrackingApplication.devicePlaceData.put(deviceId, newData);
             routeHistoryData.setRouteHistory(routeHistory);
             this.routeHistoryDataRepository.save(routeHistoryData);

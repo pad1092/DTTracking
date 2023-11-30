@@ -1,5 +1,6 @@
 package ducpa.dttracking.repository;
 
+import ducpa.dttracking.entity.Device;
 import ducpa.dttracking.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

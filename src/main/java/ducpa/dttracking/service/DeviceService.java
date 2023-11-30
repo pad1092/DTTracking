@@ -15,7 +15,9 @@ import java.util.List;
 public class DeviceService {
     @Autowired
     private DeviceRepository deviceRepository;
-
+    public Device getDeviceById(String id){
+        return deviceRepository.getDeviceById(id);
+    }
     public String activeNewDevice(User user, Device device){
         JSONObject response = new JSONObject();
         response.put("message", "");

@@ -11,6 +11,9 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 $(document).ready(function () {
+    $('#myModal').on('shown.bs.modal', function() {
+        map.invalidateSize();
+    });
     getListUserDevice();
     // Handle click event for the "Add Item" button
     $('#add-btn').click(function () {
@@ -145,38 +148,51 @@ function submitForm(){
   }
 
     // Collect data from input fields
-    const itemName = $('#itemName').val();
-    const itemDescription = $('#itemDescription').val();
+    const name = $('#itemName').val();
+    const description = $('#itemDescription').val();
     const startTime = $('#sttime').val();
     const endTime = $('#endtime').val();
-    const scheduler = $('#schedular').val();
-    const selectedDevices = getSelectedDevices();
-    const lat = coordinate[0];
-    const long = coordinate[1];
+    const schedular = $('#schedular').val();
+    const devicesID = getSelectedDevices();
+    const latitude = coordinate[0];
+    const longitude = coordinate[1];
     const range = limit;
 
     if (!validateTimeRange(startTime, endTime)) {
       // Display an error message or take appropriate action
       $('#msg-erorr').text('Thời gian bắt đầu và kết thúc không hợp lệ');
+      return;
     }
 
     // Create an object with the collected data
     const formData = {
-      itemName,
-      itemDescription,
-      startTime,
-      endTime,
-      scheduler,
-      selectedDevices,
-      lat,
-      long,
-      range
+        name,
+        description,
+        startTime,
+        endTime,
+        schedular,
+        latitude,
+        longitude,
+        range,
     };
 
-    // Perform additional actions if needed
-
-    // Log the collected data to the console (for demonstration purposes)
-    console.log(formData);
+    let data = {
+        'alert' : formData,
+    }
+    console.log(data)
+    let url = API_URL + '/alerts?devicesID=' + devicesID
+    $.ajax({
+        url: url,
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(formData),
+        success: function(response) {
+            console.log('success')
+        },
+        error: function(error) {
+            console.error('Error adding device:', error);
+        }
+    });
 }
 function validateTimeRange(start, end) {
   const startTime = new Date(`1970-01-01T${start}`);
@@ -185,11 +201,11 @@ function validateTimeRange(start, end) {
 }
 // Function to get selected devices
 function getSelectedDevices() {
-  const selectedDevices = [];
+  const devicesID = [];
   $('.resule-item.selected').each(function () {
-    selectedDevices.push($(this).text());
+      devicesID.push($(this).attr("deviceid"));
   });
-  return selectedDevices;
+  return devicesID.join(',');
 }
 
 

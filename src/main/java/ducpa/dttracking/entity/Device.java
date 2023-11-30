@@ -28,4 +28,6 @@ public class Device {
 
     @OneToMany(mappedBy = "device", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<RouteHistory> routeHistories;
+    @OneToMany(mappedBy = "device", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<DeviceAlert> deviceAlertList;
 }

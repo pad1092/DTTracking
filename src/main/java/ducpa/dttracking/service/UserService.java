@@ -45,6 +45,7 @@ public class UserService {
         devices.forEach(device -> {
             device.setUserDevice(null);
             device.setRouteHistories(null);
+            device.setDeviceAlertList(null);
         });
         return devices;
     }
