@@ -41,11 +41,15 @@
                             <i class="fa-solid fa-location-crosshairs mr-1"></i>
                             Theo dõi</a>
                     </li>
-                    <li class="mx-2 list-unstyled d-inline-block nav-item">
-                        <a th:href="@{/users/notification}" class="nav-link">
+                    <li class="mx-2 list-unstyled d-inline-block nav-item ">
+                        <div class="nav-link">
                             <i class="fa-regular fa-bell mr-1"></i>
-                            Quản lý thông báo
-                        </a>
+                            Quản lý cảnh báo
+                            <div class="submenu">
+                                <a th:href="@{/users/notification-settings}" class="submenu-item ">Thiết lập cảnh báo</a>
+                                <a th:href="@{/users/alert-methods}" class="submenu-item">Phương thức cảnh báo</a>
+                            </div>
+                        </div>
                     </li>
                     <li class="mx-2 list-unstyled d-inline-block nav-item active">
                         <a th:href="@{/users/route}" class="nav-link">
@@ -76,10 +80,16 @@
                     <i class="fa-solid fa-location-crosshairs mr-1"></i>
                     Theo dõi</a>
             </li>
-            <li class="mx-2 list-unstyled d-inline-block nav-item">
-                <a th:href="@{/users/notification}" class="nav-link">
-                    <i class="fa-regular fa-bell mr-1"></i>
-                    Quản lý thông báo
+            <li class="mx-2 list-unstyled d-inline-block nav-item ">
+                <a th:href="@{/users/notification-settings}" class="nav-link ">
+                    <i class="fa-solid fa-bell mr-1"></i>
+                    Thiết lập cảnh báo
+                </a>
+            </li>
+            <li class="mx-2 list-unstyled d-inline-block nav-item ">
+                <a th:href="@{/users/alert-methods}" class="nav-link">
+                    <i class="fa-solid fa-gear mr-1"></i>
+                    Phương thức cảnh báo
                 </a>
             </li>
             <li class="mx-2 list-unstyled d-inline-block nav-item active">
@@ -89,6 +99,7 @@
                 </a>
             </li>
             <li class="mx-2 list-unstyled d-inline-block nav-item">
+                <i class="fa-solid fa-user"></i>
                 <a th:href="@{/users/profile}" class="nav-link">Tài khoản</a>
             </li>
         </div>
@@ -118,9 +129,9 @@
                 <!--        <li deviceID="0004" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>-->
             </ul>
         </div>
-        <span id="response-msg" class="text-warning d-inline-block"></span>
         <span class="d-block f-w-bold" id="device-watching"></span>
     </div>
+    <span id="response-msg" class="text-warning d-inline-block"></span>
     <div id="map" class="my-4"></div>
 </div>
 <!-- <div class="py-3" id="footer">

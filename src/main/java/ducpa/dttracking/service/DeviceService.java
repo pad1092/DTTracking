@@ -19,7 +19,9 @@ public class DeviceService {
     public String activeNewDevice(User user, Device device){
         JSONObject response = new JSONObject();
         response.put("message", "");
-        if (deviceRepository.getDeviceById(device.getId()) != null ){
+
+        Device findDevice = deviceRepository.getDeviceById(device.getId());
+        if (findDevice == null || (findDevice != null && findDevice.getUserDevice() != null)){
             response.put("message", "Mã '" + device.getId() +"' không tồn tại hoặc đã được kích hoạt");
         }
         else {
@@ -37,7 +39,8 @@ public class DeviceService {
         List<String> messages = new ArrayList<>();
         response.put("hasError", false);
         devices.forEach(device -> {
-            if (deviceRepository.getDeviceById(device.getId()) != null){
+            Device findDevice = deviceRepository.getDeviceById(device.getId());
+            if (findDevice == null || (findDevice != null && findDevice.getUserDevice() != null)){
                 response.put("hasError", true);
                 messages.add("Mã '" + device.getId() +"' không tồn tại hoặc đã được kích hoạt");
             }

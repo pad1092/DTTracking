@@ -20,4 +20,8 @@ public class UserController {
     public String userRoute(){
         return "user/route";
     }
+    @GetMapping("/users/notification-settings")
+    public String setUpleart(){
+        return "/user/setup-alert";
+    }
 }
