@@ -2,8 +2,10 @@ package ducpa.dttracking.service;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import ducpa.dttracking.entity.Device;
 import ducpa.dttracking.entity.User;
 import ducpa.dttracking.repository.UserRepository;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -37,4 +39,12 @@ public class UtilService {
         return "";
     }
 
+    public Device stringToDevice(String deviceString){
+        JSONObject deviceObj = new JSONObject(deviceString);
+        Device device = new Device();
+        device.setId((String) deviceObj.get("id"));
+        device.setName((String) deviceObj.get("name"));
+        device.setDescription((String) deviceObj.get("description"));
+        return device;
+    }
 }

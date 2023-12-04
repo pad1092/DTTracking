@@ -19,6 +19,7 @@ public class DeviceService {
         return deviceRepository.getDeviceById(id);
     }
     public String activeNewDevice(User user, Device device){
+        System.out.println(device);
         JSONObject response = new JSONObject();
         response.put("message", "");
 

@@ -131,6 +131,7 @@ function renderTableDevices(){
 
 function addNewDevice(){
   $('#add-btn').click(function() {
+    $('#msg-response').text('');
     // Clear the input fields in the add modal
     $('#addDeviceId').val('');
     $('#addDeviceName').val('');
@@ -157,15 +158,19 @@ function addNewDevice(){
     var imageInput = document.getElementById('addImageInput');
 
     formData.append("imageFile", imageInput.files[0]);
+    console.log(device);
+    displayLoading('loading-addmodal');
     let url = API_URL + '/users/devices/active'
     $.ajax({
       url: url,
       method: 'POST',
+      enctype: "multipart/form-data",
       processData: false,
-      contentType: 'multipart/form-data',
+      contentType: false,
       data: formData,
       success: function(response) {
         console.log('Add device success:', response);
+        hideLoading('loading-addmodal');
         if (response.message === ""){
           renderTableDevices();
           $('#addDeviceModal').modal('hide');
@@ -175,12 +180,19 @@ function addNewDevice(){
         }
       },
       error: function(error) {
+        hideLoading('loading-addmodal');
         console.error('Error adding device:', error);
       }
     });
   });
 }
 
+function displayLoading(idElm){
+  document.getElementById(idElm).style.display = 'inline-block';
+}
+function hideLoading(idElm){
+  document.getElementById(idElm).style.display = 'none';
+}
 function uploadExcel(){
   $('#upload-excel').click(function() {
     // Clear the file input and error message
