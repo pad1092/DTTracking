@@ -19,7 +19,7 @@ public class Device {
     private String name;
     private String description;
     private Date activeDate;
-
+    private String imageUrl;
     @ManyToOne()
     @JoinColumn(name = "user_id")
     @EqualsAndHashCode.Exclude

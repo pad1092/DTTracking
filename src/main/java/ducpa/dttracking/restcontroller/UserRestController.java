@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -48,12 +49,17 @@ public class UserRestController {
     }
 
     @PostMapping("/users/devices/active")
-    public ResponseEntity<?> activeDevice(@RequestBody Device device, Authentication authentication){
-        User user = utilService.getUserByRequest(authentication);
-        System.out.println(device);
-
+    public ResponseEntity<?> activeDevice(@RequestPart Device device,
+                                          @RequestPart MultipartFile imageFile,
+                                          Authentication authentication){
+        System.out.println(imageFile.getName());
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
-                .body(deviceService.activeNewDevice(user, device));
+                .body(device);
+//        User user = utilService.getUserByRequest(authentication);
+//        System.out.println(device);
+//
+//        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
+//                .body(deviceService.activeNewDevice(user, device));
     }
     @PostMapping("/users/devices/active-list")
     public ResponseEntity<?> activeListDevice(@RequestBody List<Device> devices, Authentication authentication){

@@ -19,11 +19,13 @@ function renderTableDevices(){
       $.each(data, function(index, item) {
         var name = item.name || 'N/A'; // Use 'N/A' for null values
         var description = item.description || 'N/A'; // Use 'N/A' for null values
+        var imageUrl = item.imageUrl;
         var formattedDate = item.activeDate ? formatDate(item.activeDate) : 'N/A';
 
         var row = `<tr>
                     <th scope="row">${index + 1}</th>
                     <td>${item.id}</td>
+                    <td><img src="${imageUrl}" class="border border-dark" alt="" style=" width: 40px; height: 40px; border-radius: 50%;"></td>
                     <td>${name}</td>
                     <td>${description}</td>
                     <td>${formattedDate}</td>
@@ -48,7 +50,6 @@ function renderTableDevices(){
     }
   });
 
-  // Delete button click event using event delegation
   $('#tbl-devices tbody').on('click', '.delete-btn', function() {
     // Get the device ID from the data attribute
     var deviceId = $(this).data('device-id');
@@ -83,16 +84,17 @@ function renderTableDevices(){
   $('#tbl-devices tbody').on('click', '.edit-btn', function() {
     // Get the device data from the row
     var deviceId = $(this).closest('tr').find('td:eq(0)').text();
-    var deviceName = $(this).closest('tr').find('td:eq(1)').text();
-    var deviceDescription = $(this).closest('tr').find('td:eq(2)').text();
-    var deviceActiveDate = $(this).closest('tr').find('td:eq(3)').text();
+    var imageURL = $(this).closest('tr').find('td:eq(1) img').attr('src');
+    var deviceName = $(this).closest('tr').find('td:eq(2)').text();
+    var deviceDescription = $(this).closest('tr').find('td:eq(3)').text();
+    var deviceActiveDate = $(this).closest('tr').find('td:eq(4)').text();
 
     // Set the data in the modal fields
     $('#editDeviceId').val(deviceId);
     $('#editDeviceName').val(deviceName);
     $('#editDeviceDescription').val(deviceDescription);
     $('#editDeviceActiveDate').val(deviceActiveDate);
-
+    displayImageEditModal(imageURL);
     // Show the edit modal
     $('#editDeviceModal').modal('show');
   });
@@ -144,17 +146,24 @@ function addNewDevice(){
     var newDeviceId = $('#addDeviceId').val();
     var newDeviceName = $('#addDeviceName').val();
     var newDeviceDescription = $('#addDeviceDescription').val();
+    var formData = new FormData()
+    var device = {
+      id: newDeviceId,
+      name: newDeviceName,
+      description: newDeviceDescription
+    }
+    formData.append("device", JSON.stringify(device));
 
+    var imageInput = document.getElementById('addImageInput');
+
+    formData.append("imageFile", imageInput.files[0]);
     let url = API_URL + '/users/devices/active'
     $.ajax({
       url: url,
       method: 'POST',
-      contentType: 'application/json',
-      data: JSON.stringify({
-        id: newDeviceId,
-        name: newDeviceName,
-        description: newDeviceDescription
-      }),
+      processData: false,
+      contentType: 'multipart/form-data',
+      data: formData,
       success: function(response) {
         console.log('Add device success:', response);
         if (response.message === ""){
@@ -245,7 +254,7 @@ function uploadExcel(){
                     console.error('Error adding device:', error);
                   }
                 });
-l
+                l
               }
             } else {
               $('#uploadError').text('Không phát hiện dữ liệu trong file.');
@@ -267,12 +276,9 @@ l
   });
 }
 function isValidData(data) {
-  // Check if the data meets your validation criteria
-  // For example, you might check if the required columns (ID, Name, Description) are present
-  // You can customize this validation based on your specific requirements
   return (
       data.length > 0 &&
-      data[0].length >= 3 &&  // Check if there are at least 3 columns
+      data[0].length >= 3 &&
       data[0][0].toLowerCase() === 'id' &&
       data[0][1].toLowerCase() === 'name' &&
       data[0][2].toLowerCase() === 'description'
@@ -285,4 +291,68 @@ function formatDate(dateString) {
   var month = (date.getMonth() + 1).toString().padStart(2, '0');
   var year = date.getFullYear();
   return `${day}/${month}/${year}`;
+}
+
+function displayAddImage() {
+  const fileInput = document.getElementById("addImageInput");
+  const imagePreview = document.getElementById("addImagePreview");
+
+  imagePreview.innerHTML = "";
+
+  if (fileInput.files && fileInput.files[0]) {
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      const img = document.createElement("img");
+      img.src = e.target.result;
+      img.alt = "Selected Image";
+      img.style.width = '40px';
+      img.style.height = '40px';
+      imagePreview.appendChild(img);
+
+      imagePreview.style.display = "block";
+    };
+
+    reader.readAsDataURL(fileInput.files[0]);
+  } else {
+    imagePreview.style.display = "none";
+  }
+}
+
+function displayEditImage(){
+  const fileInput = document.getElementById("editImageInput");
+  const imagePreview = document.getElementById("editImagePreview");
+
+  imagePreview.innerHTML = "";
+
+  if (fileInput.files && fileInput.files[0]) {
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      const img = document.createElement("img");
+      img.src = e.target.result;
+      img.alt = "Selected Image";
+      img.style.width = '40px';
+      img.style.height = '40px';
+      imagePreview.appendChild(img);
+
+      imagePreview.style.display = "block";
+    };
+
+    reader.readAsDataURL(fileInput.files[0]);
+  } else {
+    imagePreview.style.display = "none";
+  }
+}
+
+function displayImageEditModal(imgURL){
+  const imagePreview = document.getElementById("editImagePreview");
+  imagePreview.innerHTML = "";
+  const img = document.createElement("img");
+  img.src = imgURL;
+  img.alt = "Selected Image";
+  img.style.width = '40px';
+  img.style.height = '40px';
+  imagePreview.appendChild(img);
+
 }
