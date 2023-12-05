@@ -64,16 +64,19 @@ public class DeviceService {
         device.setName(null);
         device.setUserDevice(null);
         device.setActiveDate(null);
-
+        device.setImageUrl("");
         deviceRepository.save(device);
     }
 
-    public void updateDevice(Device updDevice){
+    public void updateDevice(Device updDevice, User user){
         Device device = deviceRepository.getDeviceById(updDevice.getId());
 
         device.setDescription(updDevice.getDescription());
         device.setName(updDevice.getName());
-
+        device.setImageUrl(updDevice.getImageUrl());
+        if (user.getUserDevices().contains(device) == false){
+            return;
+        }
         deviceRepository.save(device);
     }
     public List<Device> findByNameContainKey(String key, User user){

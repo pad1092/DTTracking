@@ -46,9 +46,13 @@ public class UserRestController {
     }
 
     @PutMapping("/users/devices/{id}")
-    public void update(@RequestBody Device device){
-        System.out.println(device);
-        deviceService.updateDevice(device);
+    public void update(@RequestParam("device") String deviceString,
+                       @RequestParam("imageFile") MultipartFile imageFile,
+                       Authentication authentication){
+        Device device = utilService.stringToDevice(deviceString);
+        User user = utilService.getUserByRequest(authentication);
+        device.setImageUrl(utilService.storageFile(imageFile));
+        deviceService.updateDevice(device, user);
     }
 
     @PostMapping("/users/devices/active")

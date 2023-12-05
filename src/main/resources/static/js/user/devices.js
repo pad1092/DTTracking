@@ -103,26 +103,39 @@ function renderTableDevices(){
     var deviceId = $('#editDeviceId').val();
     var updatedName = $('#editDeviceName').val();
     var updatedDescription = $('#editDeviceDescription').val();
+
+    var formData = new FormData()
+    var device = {
+      id: deviceId,
+      name: updatedName,
+      description: updatedDescription
+    }
+    formData.append("device", JSON.stringify(device));
+
+    var imageInput = document.getElementById('editImageInput');
+
+    formData.append("imageFile", imageInput.files[0]);
     console.log(updatedName, updatedDescription);
     // Close the edit modal
-    $('#editDeviceModal').modal('hide');
-
+    displayLoading("loading-editmodal");
     // Send a request to the server to update the data
     $.ajax({
       url: url + '/' + deviceId, // Replace with your actual update endpoint
       method: 'PUT',
-      contentType: 'application/json',
-      data: JSON.stringify({
-        id: deviceId,
-        name: updatedName,
-        description: updatedDescription
-      }),
+      enctype: "multipart/form-data",
+      processData: false,
+      contentType: false,
+      data: formData,
       success: function(response) {
         console.log('Update success:', response);
+        $('#editDeviceModal').modal('hide');
+        hideLoading("loading-editmodal");
         renderTableDevices();
       },
       error: function(error) {
         console.error('Error updating data:', error);
+        $('#editDeviceModal').modal('hide');
+        hideLoading("loading-editmodal");
       }
     });
   });
