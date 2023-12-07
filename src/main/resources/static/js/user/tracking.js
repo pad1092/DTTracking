@@ -1,67 +1,45 @@
-var listDeviceSelected = [];
-var listDeviceByName = [];
-var subscriptions = [];
+var subscription = null;
 var stompClient;
+var curPosition = null;
+var changedMsgConnecting = false;
 // const API_URL = 'https://dttracking.phamanhduc.com/DTTracking/api'
 const API_URL = '/DTTracking/api'
 $(document).ready(function() {
     getListUserDevice();
 });
 function getListUserDevice(){
-    let enpoint = API_URL + '/users/devices';
-    $.get(enpoint, function (devices){
-        const listContainer = document.getElementById("list-result");
+    let endpoint = API_URL + '/users/devices';
+    $.get(endpoint, function (devices){
 
-        // Clear existing list items
-        listContainer.innerHTML = '';
+        var select = $('#device-section');
+        select.empty(); // Clear existing options
+        select.append('<option value="-1" selected disabled>Chọn thiết bị</option>');
 
-        // Iterate over the devices and create list items
-        devices.forEach(device => {
-            const listItem = document.createElement("li");
-            listItem.setAttribute("deviceID", device.id);
-            listItem.setAttribute("device-name", device.name);
-            listItem.className = "text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item";
-            listItem.textContent = device.name;
-            listItem.addEventListener("click", function() {
-                selectDevice(this);
-            });
-
-            listContainer.appendChild(listItem);
+        devices.forEach(function (device) {
+            select.append('<option value="' + device.id + '">' + device.name + '</option>');
         });
     })
 }
 
-function connectSocket() {
-    var socket = new SockJS("/gps-socket");
+function connectSocket(deviceID) {
+    var socket = new SockJS("/DTTracking/gps-socket");
     stompClient = Stomp.over(socket);
     stompClient.debug = null;
     stompClient.connect({}, function (frame) {
-        listDeviceSelected.forEach(function (deviceID){
-            let endpoint = "/device/" + deviceID;
-            let subscription = stompClient.subscribe(endpoint, function (messageOutput, headers) {
-                console.log(headers)
-                handleOutput(messageOutput.body);
-            })
-            subscriptions.push(subscription);
+        let endpoint = "/device/" + deviceID;
+        subscription = stompClient.subscribe(endpoint, function (messageOutput, headers) {
+            curPosition = messageOutput.body;
+            handleOutput(messageOutput.body);
         })
     });
 }
 
 // Disconnect function
 function disconnectSockets() {
-    if (subscriptions.length > 0){
-        subscriptions.forEach(function (subscription) {
-            subscription.unsubscribe();
-        });
+    if (subscription != null) {
+        subscription.unsubscribe();
         stompClient.disconnect();
     }
-}
-
-function inputChange(e){
-    let endpoint = API
-    let key = e.value;
-    $.get()
-    displaySelection();
 }
 function displaySelection(){
     $('#select-wrapper').addClass('--item-display');
@@ -90,18 +68,26 @@ function selectDevice(element){
     }
     $element.toggleClass('selected')
 }
-function viewTracking(){
-
-    console.log(listDeviceSelected)
-    if(listDeviceSelected.length == 0){
-        $('#device-watching').text('Không thiết bị nào được chọn')
-    }
-    else{
-        let msg = "Đang theo dõi vị trí của thiết bị: " + listDeviceByName;
-        $('#device-watching').text(msg)
+function viewTracking(deviceID){
+    if (deviceID != -1){
         disconnectSockets();
-        connectSocket();
+        connectSocket(deviceID);
+        checkConnecting();
     }
-    hideSelection();
-    unsubDeviceID = listDeviceSelected;
+}
+function checkConnecting(){
+    $("#connect-status_msg").text("Đang kết nối đến máy chủ")
+    $("#connect-status").addClass('display');
+    var intervalId = setInterval(function() {
+        if (curPosition != null){
+            if (curPosition.split(",")[3] != "" && curPosition.split(",")[5] != "") {
+                clearInterval(intervalId);
+                $("#connect-status").removeClass('display');
+            }
+            else if (curPosition != null && changedMsgConnecting == false){
+                $("#connect-status_msg").text("Thiết bị đang kết nối đến vệ tinh");
+                changedMsgConnecting = true;
+            }
+        }
+    }, 1000);
 }

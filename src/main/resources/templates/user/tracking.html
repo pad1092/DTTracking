@@ -106,30 +106,42 @@
     </div>
   </div>
 </div>
-<div class="body-wrapper">
+<div class="body-wrapper ">
   <h6 class="pt-5 text-uppercase f-w-bold text-center text-navy mb-4" style="width: max-content;">
     Theo dõi
   </h6>
-  <div class="">
-    <div class="d-inline-block">
-<!--      <span>Chọn thiết bị</span>-->
-      <div class=" d-inline-block mr-2 border " id="input-wrapper">
-        <input placeholder="Chọn danh sách thiết bị" id="input-deviceID" type="text" class="form-control p-0 px-2 d-inline-block " onchange="inputChange(this)">
-        <div id="toggle-selection" class="d-inline-block text-center" style="width: 20px;" onclick="toggleSelection()">
-          <i class="fa-solid fa-chevron-right " id="input-icon"></i>
+  <div class="row m-0">
+    <div class="col-lg-3 p-0 pr-3">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <!-- <input placeholder="Chọn thiết bị" id="input-deviceID" type="text" class="form-control p-0 px-2 d-inline-block flex-1" onchange="inputChange(this)" disabled> -->
+        <label for="device-section" class="text-navy f-w-bolder">Thiết bị:</label>
+        <select name="" id="device-section" class="form form-control d-inline-block w-75" onchange="viewTracking(value)">
+          <option value="-1" selected disabled>Chọn thiết bị</option>
+<!--          <option deviceid="0001" device-name="Arduino" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item ">Arduino</option>-->
+<!--          <option deviceid="0006" device-name="Xem máy" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item">Xem máy</option>-->
+<!--          <option deviceid="0007" device-name="Glanzen" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item">Glanzen</option>-->
+        </select>
+      </div>
+      <div class="pt-2" id="option-advance">
+        <div class="d-flex  justify-content-between">
+          <h6 class="text-navy f-w-bolder">Hiển thị vùng nguy hiểm:</h6>
+          <div class="toggle-container">
+            <input type="checkbox" class="toggle-input" id="toggle">
+            <label class="toggle-switch" for="toggle">
+              <div class="toggle-slider"></div>
+            </label>
+          </div>
         </div>
       </div>
+      <span class="d-block f-w-bold" id="device-watching"></span>
     </div>
-    <div class="btn btn-sm d-inline-block h-100 btn-outline-primary py-2 mb-1" onclick="viewTracking()">Xem</div>
-    <div id="select-wrapper" class="" style="display: none;">
-<!--      <span style="opacity: 0;">Chọn thiết bị</span>-->
-      <ul id="list-result" class="d-inline-block mx-2 mt-2 ">
-<!--        <li deviceID="0001" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>-->
-      </ul>
+    <div id="map" class="col-lg-9 mb-4 p-0">
+      <div id="connect-status" class="h-100 w-100 text-center text-align-center align-items-center justify-content-center" style="display: none;">
+        <h5 id="connect-status_msg" class="m-2 d-inline-block text-white">Thiết bị đang kết nối đến vệ tinh</h5>
+        <img th:src="@{/images/loading.svg}" style="width: 40px;">
+      </div>
     </div>
-    <span class="d-block f-w-bold" id="device-watching"></span>
   </div>
-  <div id="map" class="my-4"></div>
 </div>
 <!-- <div class="py-3" id="footer">
     <div class="footer-wrapper">
