@@ -2,10 +2,24 @@ var subscription = null;
 var stompClient;
 var curPosition = null;
 var changedMsgConnecting = false;
+var devicesMap = new Map();
+var listDangerZone = [];
+var circle1 = null;
+var circle2 = null;
 // const API_URL = 'https://dttracking.phamanhduc.com/DTTracking/api'
 const API_URL = '/DTTracking/api'
 $(document).ready(function() {
     getListUserDevice();
+
+    // action for button danger zone
+    $('#toggle').change(function() {
+        // Check if the checkbox is checked
+        if ($(this).is(':checked')) {
+            displayDangerZone();
+        } else {
+            hideDangerZone();
+        }
+    });
 });
 function getListUserDevice(){
     let endpoint = API_URL + '/users/devices';
@@ -17,6 +31,7 @@ function getListUserDevice(){
 
         devices.forEach(function (device) {
             select.append('<option value="' + device.id + '">' + device.name + '</option>');
+            devicesMap.set(device.id, device.imageUrl);
         });
     })
 }
@@ -29,6 +44,7 @@ function connectSocket(deviceID) {
         let endpoint = "/device/" + deviceID;
         subscription = stompClient.subscribe(endpoint, function (messageOutput, headers) {
             curPosition = messageOutput.body;
+            checkIsInsideDangerZone();
             handleOutput(messageOutput.body);
         })
     });
@@ -41,34 +57,12 @@ function disconnectSockets() {
         stompClient.disconnect();
     }
 }
-function displaySelection(){
-    $('#select-wrapper').addClass('--item-display');
-    $('#input-icon').addClass('expand');
-}
-function hideSelection(){
-    $('#select-wrapper').removeClass('--item-display');
-    $('#input-icon').removeClass('expand');
-}
-function toggleSelection(){
-    $('#input-icon').toggleClass('expand');
-    $('#select-wrapper').toggleClass('--item-display')
-}
-function selectDevice(element){
-    var $element = $(element);
-    let deviceID = ($element.attr("deviceID"))
-    let deviceName = ($element.attr("device-name"))
-    let index = listDeviceSelected.indexOf(deviceID);
-    if (index !== -1) {
-        listDeviceSelected.splice(index, 1);
-        listDeviceByName.splice(index, 1);
-    }
-    else {
-        listDeviceSelected.push(deviceID)
-        listDeviceByName.push(deviceName);
-    }
-    $element.toggleClass('selected')
-}
 function viewTracking(deviceID){
+    clearExitMarker();
+    curPosition = null;
+    setCustomIcon(devicesMap.get(deviceID))
+
+    console.log(devicesMap.get(deviceID))
     if (deviceID != -1){
         disconnectSockets();
         connectSocket(deviceID);
@@ -76,7 +70,7 @@ function viewTracking(deviceID){
     }
 }
 function checkConnecting(){
-    $("#connect-status_msg").text("Đang kết nối đến máy chủ")
+    $("#connect-status_msg").text("Đang chờ dữ liệu từ thiết bị")
     $("#connect-status").addClass('display');
     var intervalId = setInterval(function() {
         if (curPosition != null){
@@ -90,4 +84,65 @@ function checkConnecting(){
             }
         }
     }, 1000);
+}
+
+function displayDangerZone(){
+    if (circle1 != null && circle2 != null){
+        circle1.addTo(map);
+        circle2.addTo(map);
+        return;
+    }
+    let coordinate1 = [21.011453333333332, 105.77917450000001];
+    let coordinate2 = [21.0227,105.7822];
+
+     circle1 = L.circle(coordinate1, {
+        radius: 500,
+         className: 'danger-zone'
+    }).addTo(map);
+     circle2 = L.circle(coordinate2, {
+        radius: 300,
+         className: 'danger-zone'
+    }).addTo(map);
+}
+function hideDangerZone(){
+    map.removeLayer(circle1);
+    map.removeLayer(circle2);
+}
+
+function checkIsInsideDangerZone(){
+    let coordinate = convertGPRMC(curPosition);
+    if (coordinate == undefined || coordinate == null)
+        return;
+    if (circle1 == null || circle2 == null)
+        return;
+
+    if (isCoordinateInsideCircle(coordinate, circle1) == true){
+        addBlinkingClass(0);
+    }
+    else {
+        removeBlinkingClass(0);
+    }
+    if (isCoordinateInsideCircle(coordinate, circle2) == true){
+        addBlinkingClass(1);
+    }
+    else {
+        removeBlinkingClass(1);
+    }
+}
+function addBlinkingClass(index) {
+    var zones = document.querySelectorAll('.danger-zone')
+    let zone = zones[index];
+    zone.classList.add('blinking');
+}
+
+function removeBlinkingClass(index) {
+    var zones = document.querySelectorAll('.danger-zone')
+    let zone = zones[index];
+    zone.classList.remove('blinking');
+}
+function isCoordinateInsideCircle(coordinate, circle) {
+    var circleCenter = circle.getLatLng();
+    var circleRadius = circle.getRadius();
+    var distance = circleCenter.distanceTo(coordinate);
+    return distance <= circleRadius;
 }

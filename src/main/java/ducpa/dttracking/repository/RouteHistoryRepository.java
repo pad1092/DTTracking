@@ -9,4 +9,6 @@ import java.util.List;
 
 public interface RouteHistoryRepository extends JpaRepository<RouteHistory, Long> {
     List<RouteHistory> findAllByDeviceAndDate(Device device, Date date);
+
+    RouteHistory findTopByDeviceOrderByIdDesc(Device device);
 }

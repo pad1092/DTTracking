@@ -4,8 +4,26 @@ $(document).ready(function (){
     getListUserDevice();
 })
 
+function changeDevice(deviceId){
+    $('#last-update-time').text('')
+    $('#last-update-place').text('')
+    let lastUpdateEndpoint = `${API_URL}/devices/${deviceId}/last`
+    $.get(lastUpdateEndpoint, function (response){
+        console.log(response);
+        if (response == null){
+            $('#last-update-time').text('Không có dữ liệu')
+            $('#last-update-place').text('Không có dữ liệu')
+        }
+        else{
+            fetchDataPlaceDate(response.latitude, response.longitude)
+            $('#last-update-time').text(convertStringToFormattedString(response.time))
+        }
+    })
+}
+
 function viewHistory(){
-    $('#response-msg').text('')
+    $('#device-watching').text('')
+
     map.eachLayer(function (layer) {
         if (layer instanceof L.Polyline) {
             map.removeLayer(layer);
@@ -14,7 +32,7 @@ function viewHistory(){
     let deviceId = $('#device-section').val();
     let time = $('#time-selection').val();
     if (deviceId == -1 || time == ''){
-        $('#response-msg').text('Hãy chọn thiết bị và nhập thời gian.')
+        $('#device-watching').text('Hãy chọn thiết bị và nhập thời gian.')
         return;
     }
 
@@ -110,4 +128,53 @@ function makePopUpContent(timeStrings){
     const timeDifferenceFormatted = hours > 0 ? `${hours}giờ ${pad(remainingMinutes)} phút` : `${remainingMinutes} phút`;
     let output = `- Thời gian di chuyển: <b>${timeDifferenceFormatted}</b> <br>- ${timeBetween}`
     return output;
+}
+
+async function fetchDataPlaceDate(lat, long) {
+    const apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${long}`;
+
+    try {
+        const response = await fetch(apiUrl);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const name = data.name;
+
+        console.log('Name:', name);
+        $('#last-update-place').text(name);
+    } catch (error) {
+        console.error('Error:', error.message);
+    }
+}
+
+function convertStringToFormattedString(timestampAndDate) {
+    // Split the string into timestamp and date components
+    const [timestamp, dateString] = timestampAndDate.split(' ');
+
+    // Extract components of the timestamp
+    const hours = Math.floor(Number(timestamp) / 10000);
+    const minutes = Math.floor((Number(timestamp) % 10000) / 100);
+    const seconds = Math.floor(Number(timestamp) % 100);
+
+    // Create a Date object from the date string
+    const dateObject = new Date(dateString);
+
+    // Extract components of the date
+    const day = dateObject.getDate();
+    const month = dateObject.getMonth() + 1; // Months are zero-based
+    const year = dateObject.getFullYear();
+
+    // Add leading zeros if necessary
+    const formattedHours = hours < 10 ? `0${hours}` : hours;
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    const formattedDay = day < 10 ? `0${day}` : day;
+    const formattedMonth = month < 10 ? `0${month}` : month;
+
+    // Create the formatted date string
+    const formattedString = `${formattedHours}:${formattedMinutes} ${formattedDay}-${formattedMonth}-${year}`;
+
+    return formattedString;
 }

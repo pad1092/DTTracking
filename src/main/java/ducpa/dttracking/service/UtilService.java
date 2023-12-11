@@ -2,7 +2,9 @@ package ducpa.dttracking.service;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import ducpa.dttracking.dto.LastRouteHistoryDataDTO;
 import ducpa.dttracking.entity.Device;
+import ducpa.dttracking.entity.RouteHistoryData;
 import ducpa.dttracking.entity.User;
 import ducpa.dttracking.repository.UserRepository;
 import org.json.JSONObject;
@@ -47,4 +49,5 @@ public class UtilService {
         device.setDescription((String) deviceObj.get("description"));
         return device;
     }
+
 }

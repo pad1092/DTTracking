@@ -44,7 +44,7 @@ public class RouteHistoryDataService {
             String lastPlaceID = (String)historyData.get("placeID");
             RouteHistory updatedRoute = (RouteHistory)historyData.get("route");
             if (System.currentTimeMillis() - lastTimeUpdated.longValue() >= 1200000L)
-                updatedRoute = this.routeHistoryService.createAndSaveNewRoute(deviceId);
+                updatedRoute = this.routeHistoryService.createAndSaveNewRoute(deviceId, routeHistoryData);
             if (!lastPlaceID.equalsIgnoreCase(currentPlaceID)) {
                 routeHistoryData.setRouteHistory(updatedRoute);
                 this.routeHistoryDataRepository.save(routeHistoryData);
@@ -57,14 +57,12 @@ public class RouteHistoryDataService {
         } else {
             JSONObject newData = new JSONObject();
             newData.put("timeUpdated", System.currentTimeMillis());
-            RouteHistory routeHistory = this.routeHistoryService.createAndSaveNewRoute(deviceId);
+            RouteHistory routeHistory = this.routeHistoryService.createAndSaveNewRoute(deviceId, routeHistoryData);
             newData.put("route", routeHistory);
             newData.put("placeID", "");
             newData.put("longitude", routeHistoryData.getLongitude());
             newData.put("latitude", routeHistoryData.getLatitude());
             DtTrackingApplication.devicePlaceData.put(deviceId, newData);
-            routeHistoryData.setRouteHistory(routeHistory);
-            this.routeHistoryDataRepository.save(routeHistoryData);
         }
     }
 }
