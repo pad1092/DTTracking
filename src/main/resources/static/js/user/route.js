@@ -10,11 +10,12 @@ function changeDevice(deviceId){
     let lastUpdateEndpoint = `${API_URL}/devices/${deviceId}/last`
     $.get(lastUpdateEndpoint, function (response){
         console.log(response);
-        if (response == null){
+        if (response.time == null){
             $('#last-update-time').text('Không có dữ liệu')
             $('#last-update-place').text('Không có dữ liệu')
         }
         else{
+            $('#loading-locate').css('display', 'inline-block');
             fetchDataPlaceDate(response.latitude, response.longitude)
             $('#last-update-time').text(convertStringToFormattedString(response.time))
         }
@@ -144,6 +145,7 @@ async function fetchDataPlaceDate(lat, long) {
         const name = data.name;
 
         console.log('Name:', name);
+        $('#loading-locate').css('display', 'none');
         $('#last-update-place').text(name);
     } catch (error) {
         console.error('Error:', error.message);
@@ -155,7 +157,7 @@ function convertStringToFormattedString(timestampAndDate) {
     const [timestamp, dateString] = timestampAndDate.split(' ');
 
     // Extract components of the timestamp
-    const hours = Math.floor(Number(timestamp) / 10000);
+    const hours = Math.floor(Number(timestamp) / 10000) + 7;
     const minutes = Math.floor((Number(timestamp) % 10000) / 100);
     const seconds = Math.floor(Number(timestamp) % 100);
 

@@ -67,9 +67,12 @@ public class RouteHistoryService {
         RouteHistoryData lastData = routeHistoryDataRepository.findTopByRouteHistoryOrderByIdDesc(lastRoute);
 
         LastRouteHistoryDataDTO lastRouteHistoryDataDTO = new LastRouteHistoryDataDTO();
-        lastRouteHistoryDataDTO.setLatitude(lastData.getLatitude());
-        lastRouteHistoryDataDTO.setLongitude(lastData.getLongitude());
-        lastRouteHistoryDataDTO.setTime(lastData.getTime() + " " + lastRoute.getDate());
+
+        if (lastData != null){
+            lastRouteHistoryDataDTO.setLatitude(lastData.getLatitude());
+            lastRouteHistoryDataDTO.setLongitude(lastData.getLongitude());
+            lastRouteHistoryDataDTO.setTime(lastData.getTime() + " " + lastRoute.getDate());
+        }
         return lastRouteHistoryDataDTO;
     }
 }
