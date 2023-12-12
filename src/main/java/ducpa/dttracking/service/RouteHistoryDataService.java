@@ -46,14 +46,17 @@ public class RouteHistoryDataService {
             if (System.currentTimeMillis() - lastTimeUpdated.longValue() >= 1200000L) {
                 updatedRoute = this.routeHistoryService.createAndSaveNewRoute(deviceId);
                 this.routeHistoryDataRepository.save(routeHistoryData);
+                System.out.println("SAVE HISTORY DATA: new route");
             }
             if (!lastPlaceID.equalsIgnoreCase(currentPlaceID)) {
                 routeHistoryData.setRouteHistory(updatedRoute);
                 this.routeHistoryDataRepository.save(routeHistoryData);
+                System.out.println("SAVE HISTORY DATA: different place");
             }
             else if (System.currentTimeMillis() - lastTimeUpdated.longValue() >= 60000){
                 routeHistoryData.setRouteHistory(updatedRoute);
                 this.routeHistoryDataRepository.save(routeHistoryData);
+                System.out.println("SAVE HISTORY DATA: every one minute");
             }
             historyData.put("timeUpdated", System.currentTimeMillis());
             historyData.put("route", updatedRoute);

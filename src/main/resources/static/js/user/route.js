@@ -127,8 +127,9 @@ function displayCoordinateOnMap(coordinate){
         var customHtmlIcon = L.divIcon({
             html: `<div class="route__marker"></div>`,
         });
+
         let marker = L.marker(newPosition, {icon: customHtmlIcon})
-            .bindTooltip(`Thời gian: ${data[2]}`);
+            .bindTooltip(`Thời gian: ${data[2]} \n Địa điểm: ${fetchDataPlaceDateForLabel(data[0], data[1])}`);
         marker.addTo(map);
         listMaker.push(marker);
     })
@@ -210,7 +211,6 @@ function makePopUpContent(timeStrings){
 
 async function fetchDataPlaceDate(lat, long) {
     const apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${long}`;
-
     try {
         const response = await fetch(apiUrl);
 
@@ -227,7 +227,24 @@ async function fetchDataPlaceDate(lat, long) {
         console.error('Error:', error.message);
     }
 }
+async function fetchDataPlaceDateForLabel(lat, long) {
+    const apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${long}`;
+    try {
+        const response = await fetch(apiUrl);
 
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const name = data.name;
+
+        return name;
+    } catch (error) {
+        console.error('Error:', error.message);
+    }
+
+}
 function convertStringToFormattedString(timestampAndDate) {
     // Split the string into timestamp and date components
     const [timestamp, dateString] = timestampAndDate.split(' ');
