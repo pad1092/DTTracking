@@ -27,12 +27,10 @@ public class RouteHistoryService {
     @Autowired
     private DeviceRepository deviceRepository;
 
-    public RouteHistory createAndSaveNewRoute(String deviceID, RouteHistoryData routeHistoryData) {
+    public RouteHistory createAndSaveNewRoute(String deviceID) {
         RouteHistory routeHistory = new RouteHistory();
         routeHistory.setDevice(this.deviceRepository.getDeviceById(deviceID));
         routeHistory.setDate(new Date(System.currentTimeMillis()));
-        routeHistory.setRouteHistoryData(new ArrayList<>());
-        routeHistory.getRouteHistoryData().add(routeHistoryData);
         this.routeHistoryRepository.saveAndFlush(routeHistory);
         return routeHistory;
     }

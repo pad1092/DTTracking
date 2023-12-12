@@ -43,9 +43,15 @@ public class RouteHistoryDataService {
             Long lastTimeUpdated = (Long)historyData.get("timeUpdated");
             String lastPlaceID = (String)historyData.get("placeID");
             RouteHistory updatedRoute = (RouteHistory)historyData.get("route");
-            if (System.currentTimeMillis() - lastTimeUpdated.longValue() >= 1200000L)
-                updatedRoute = this.routeHistoryService.createAndSaveNewRoute(deviceId, routeHistoryData);
+            if (System.currentTimeMillis() - lastTimeUpdated.longValue() >= 1200000L) {
+                updatedRoute = this.routeHistoryService.createAndSaveNewRoute(deviceId);
+                this.routeHistoryDataRepository.save(routeHistoryData);
+            }
             if (!lastPlaceID.equalsIgnoreCase(currentPlaceID)) {
+                routeHistoryData.setRouteHistory(updatedRoute);
+                this.routeHistoryDataRepository.save(routeHistoryData);
+            }
+            else if (System.currentTimeMillis() - lastTimeUpdated.longValue() >= 60000){
                 routeHistoryData.setRouteHistory(updatedRoute);
                 this.routeHistoryDataRepository.save(routeHistoryData);
             }
@@ -57,12 +63,14 @@ public class RouteHistoryDataService {
         } else {
             JSONObject newData = new JSONObject();
             newData.put("timeUpdated", System.currentTimeMillis());
-            RouteHistory routeHistory = this.routeHistoryService.createAndSaveNewRoute(deviceId, routeHistoryData);
+            RouteHistory routeHistory = this.routeHistoryService.createAndSaveNewRoute(deviceId);
             newData.put("route", routeHistory);
             newData.put("placeID", "");
             newData.put("longitude", routeHistoryData.getLongitude());
             newData.put("latitude", routeHistoryData.getLatitude());
             DtTrackingApplication.devicePlaceData.put(deviceId, newData);
+            routeHistoryData.setRouteHistory(routeHistory);
+            this.routeHistoryDataRepository.save(routeHistoryData);
         }
     }
 }

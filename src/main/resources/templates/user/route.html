@@ -112,21 +112,48 @@
         Lịch sử di chuyển
     </h6>
     <div class="row m-0">
-        <div class=" col-lg-3 p-0 pr-3 mb-4">
+        <div class=" col-lg-4 p-0 pr-3 mb-4">
             <div class="pb-2">
                 <select name="" id="device-section" class="form form-control d-inline-block mb-3" onchange="changeDevice(value)">
-                    <option value="-1" selected>Chọn danh sách thiết bị</option>
+                    <option value="-1" selected>Chọn thiết bị</option>
                 </select>
                 <input placeholder="Chọn thời gian" id="time-selection" class="form form-control d-inline-block  mb-4">
-                <span class="d-block f-w-bold text-warning mb-1" id="device-watching"></span>
+                <span class="d-block f-w-bold text-warning mb-4" id="device-watching"></span>
                 <div class="border-left pl-2 mb-4">
                     <h6 class="text-navy mt-0 text-capitalize ">Thông tin vị trí lần cuối</h6>
                     <div class="">
                         <h6 class="d-inline-block w-25 m-0">Thời gian: </h6> <span id="last-update-time" class="font-weight-bolder text-dark"></span>
                         <br>
                         <h6 class="d-inline-block w-25 m-0">vị trí: </h6>
-                        <img id="loading-locate" src="../images/dot-loading.svg" style="display: none; height: 24px;">
+                        <img id="loading-locate" src="../images/dot-loading.svg" style="display: inline-block; height: 24px;">
                         <span id="last-update-place" class="font-weight-bolder text-dark"></span>
+                    </div>
+                </div>
+                <div class="" id="coor-detail">
+                    <h6 class="text-navy">Tọa độ chi tiết</h6>
+                    <div id="coor-detail_table_wrapper" class="border mb-3">
+                        <table class="table table-hover border table-striped text-center mb-0" id="tbl-coordinate" >
+                            <thead >
+                            <tr>
+                                <th scope="col" class="col-2">Vĩ độ</th>
+                                <th scope="col" class="col-2">Kinh độ</th>
+                                <th scope="col" class="col-2">Thời gian</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                        <h6 class="text-center" id="tbl-coordinate-msg" style="display: none">Không có dữ liệu</h6>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between my-4 align-items-center">
+                    <h6 class="d-inline-block text-navy m-0">Hiển thị theo tọa độ</h6>
+                    <div class="toggle-container">
+                        <input type="checkbox" class="toggle-input" id="toggle1" onchange="toggleTableCoordinate(this.checked)">
+                        <label class="toggle-switch m-0" for="toggle1">
+                            <div class="toggle-slider"></div>
+                        </label>
                     </div>
                 </div>
                 <div class=" mb-3 d-flex justify-content-center">
@@ -134,7 +161,7 @@
                 </div>
             </div>
         </div>
-        <div id="map" class="col-lg-9 mb-4 p-0"></div>
+        <div id="map" class="col-lg-8 mb-4 mt-0 p-0"></div>
     </div>
 </div>
 <!-- <div class="py-3" id="footer">

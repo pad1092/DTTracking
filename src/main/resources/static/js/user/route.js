@@ -1,15 +1,16 @@
 const API_URL = '/DTTracking/api'
+var listRouteHistory = []
+var displayByCoordinate = false;
+var listMaker = [];
 $(document).ready(function (){
     TinyDatePicker(document.getElementById('time-selection'));
     getListUserDevice();
 })
-
 function changeDevice(deviceId){
     $('#last-update-time').text('')
     $('#last-update-place').text('')
     let lastUpdateEndpoint = `${API_URL}/devices/${deviceId}/last`
     $.get(lastUpdateEndpoint, function (response){
-        console.log(response);
         if (response.time == null){
             $('#last-update-time').text('Không có dữ liệu')
             $('#last-update-place').text('Không có dữ liệu')
@@ -25,11 +26,6 @@ function changeDevice(deviceId){
 function viewHistory(){
     $('#device-watching').text('')
 
-    map.eachLayer(function (layer) {
-        if (layer instanceof L.Polyline) {
-            map.removeLayer(layer);
-        }
-    });
     let deviceId = $('#device-section').val();
     let time = $('#time-selection').val();
     if (deviceId == -1 || time == ''){
@@ -43,7 +39,66 @@ function viewHistory(){
     let timestamp = jsDate.getTime();
 
     let endpoint = `${API_URL}/route-history?deviceID=${deviceId}&date=${timestamp}`;
-    $.get(endpoint, function (listRouteHistory){
+    $.get(endpoint, function (listRouteHistoryResponse){
+        listRouteHistory = listRouteHistoryResponse;
+        visualizeMap();
+        visualizeTable();
+    })
+}
+function visualizeTable(){
+    // clear table firstly
+    var $tableBody = $('#tbl-coordinate tbody');
+    $tableBody.empty();
+    let historyData = getListCoordinateFromHistorydata();
+
+    if (historyData.length === 0){
+        $('#tbl-coordinate-msg').css('display', 'block');
+    }
+    else {
+        $('#tbl-coordinate-msg').css('display', 'none');
+    }
+
+    historyData.forEach(function (data, index){
+        $tableBody.append(`<tr onclick="highLightCoordinate(${index}, ${data[0]}, ${data[1]})" >` +
+            '<td>' + data[0].toFixed(6) + '</td>' +
+            '<td>' + data[1].toFixed(6) + '</td>' +
+            '<td>' + data[2] + '</td>' +
+            `</tr>`);
+    })
+
+    $('#coor-detail_table_wrapper').animate({
+        scrollTop: $('#coor-detail_table_wrapper')[0].scrollHeight
+    }, 0);
+}
+
+function clearMapData(){
+    map.eachLayer(function (layer) {
+        if (layer instanceof L.Polyline || layer instanceof  L.Marker) {
+            map.removeLayer(layer);
+        }
+    });
+}
+function getListCoordinateFromHistorydata(){
+    let coordinateList = [];
+    listRouteHistory.forEach(function (routeHistory){
+        routeHistory.routeHistoryData.forEach(function (historyData){
+            let data = [];
+            data.push(historyData.latitude);
+            data.push(historyData.longitude);
+            data.push(convertAndFormatTime(historyData.time, 7));
+            coordinateList.push(data);
+        })
+    })
+    return coordinateList;
+}
+function visualizeMap(){
+    clearMapData(); // clear old data
+
+    if (displayByCoordinate == true){
+        let coordinate = getListCoordinateFromHistorydata();
+        displayCoordinateOnMap(coordinate);
+    }
+    else{
         listRouteHistory.forEach(function (routeHistory, index){
             let routeHistoryData = routeHistory.routeHistoryData;
             let listCoordinate = [];
@@ -58,11 +113,33 @@ function viewHistory(){
             let content = makePopUpContent(listTimeString);
             displayRouteOnMap(listCoordinate, content);
         })
+    }
+}
+
+function displayCoordinateOnMap(coordinate){
+    listMaker = [];
+    if (coordinate.length === 0)
+        return;
+    let index = Math.floor(coordinate.length/2);
+    map.setView(coordinate[index], 12);
+    coordinate.forEach(function (data){
+        let newPosition = [data[0], data[1]];
+        var customHtmlIcon = L.divIcon({
+            html: `<div class="route__marker"></div>`,
+        });
+        let marker = L.marker(newPosition, {icon: customHtmlIcon})
+            .bindTooltip(`Thời gian: ${data[2]}`);
+        marker.addTo(map);
+        listMaker.push(marker);
     })
 }
 
 function displayRouteOnMap(coordinate, popupContent){
-    map.setView(coordinate[0], map.getZoom());
+    if (coordinate.length === 0)
+        return;
+
+    let index = Math.floor(coordinate.length/2);
+    map.setView(coordinate[index], 12);
     var polyline = L.polyline(coordinate, { color: '#0866ff', weight: 6, opacity: 0.7}).addTo(map);
 
     polyline.bindPopup(popupContent);
@@ -121,7 +198,7 @@ function makePopUpContent(timeStrings){
     const minTimeFormatted = formatTime(minTime);
     const maxTimeFormatted = formatTime(maxTime);
 
-    const timeDifferenceInMinutes = Math.floor((maxTime - minTime) / (1000 * 60));
+    const timeDifferenceInMinutes = Math.ceil((maxTime - minTime) / (1000 * 60));
     const hours = Math.floor(timeDifferenceInMinutes / 60);
     const remainingMinutes = timeDifferenceInMinutes % 60;
 
@@ -144,7 +221,6 @@ async function fetchDataPlaceDate(lat, long) {
         const data = await response.json();
         const name = data.name;
 
-        console.log('Name:', name);
         $('#loading-locate').css('display', 'none');
         $('#last-update-place').text(name);
     } catch (error) {
@@ -179,4 +255,46 @@ function convertStringToFormattedString(timestampAndDate) {
     const formattedString = `${formattedHours}:${formattedMinutes} ${formattedDay}-${formattedMonth}-${year}`;
 
     return formattedString;
+}
+// Function to convert GMT+0 time to GMT+7 and format as hh:mm:ss
+function convertAndFormatTime(inputValue, hoursToAdd) {
+    const hours = parseInt(inputValue.slice(0, 2), 10);
+    const minutes = parseInt(inputValue.slice(2, 4), 10);
+    const seconds = parseInt(inputValue.slice(4, 6), 10);
+    let offsetHours = hours + 7;
+    offsetHours = Math.floor(offsetHours / 24) + offsetHours % 24;
+    const formattedTime = `${offsetHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    return formattedTime;
+}
+function toggleTableCoordinate(value){
+    displayByCoordinate = value;
+    clearRouteHighlight();
+    visualizeMap();
+}
+function highLightCoordinate(index, lat, long){
+    document.getElementById('toggle1').checked = true;
+    displayByCoordinate = true;
+    visualizeMap();
+
+    map.setView([lat, long], 18);
+
+    clearRouteHighlight();
+
+    let markers = document.querySelectorAll('.route__marker');
+    let marker = markers[index];
+    marker.classList.add('blinking')
+
+    let rows = document.querySelectorAll('#tbl-coordinate tbody tr')
+    rows[index].classList.add('row__highlight')
+}
+
+function clearRouteHighlight(){
+    let rows = document.querySelectorAll('#tbl-coordinate tbody tr')
+    rows.forEach(function (row){
+        row.classList.remove('row__highlight')
+    })
+    let markers = document.querySelectorAll('.route__marker');
+    markers.forEach(function (marker){
+        marker.classList.remove('blinking')
+    })
 }
