@@ -114,10 +114,13 @@
     <div class="row m-0">
         <div class=" col-lg-4 p-0 pr-3 mb-4">
             <div class="pb-2">
-                <select name="" id="device-section" class="form form-control d-inline-block mb-3" onchange="changeDevice(value)">
-                    <option value="-1" selected>Chọn thiết bị</option>
-                </select>
-                <input placeholder="Chọn thời gian" id="time-selection" class="form form-control d-inline-block  mb-4">
+                <div class="d-flex align-items-center mb-4">
+                    <select name="" id="device-section" class="form form-control d-inline-block" onchange="changeDevice(value)">
+                        <option value="-1" selected>Chọn thiết bị</option>
+                    </select>
+                    <div style="width: 14px"></div>
+                    <input placeholder="Chọn thời gian" id="time-selection" class="form form-control d-inline-block">
+                </div>
                 <span class="d-block f-w-bold text-warning mb-4" id="device-watching"></span>
                 <div class="border-left pl-2 mb-4">
                     <h6 class="text-navy mt-0 text-capitalize ">Thông tin vị trí lần cuối</h6>
@@ -125,7 +128,7 @@
                         <h6 class="d-inline-block w-25 m-0">Thời gian: </h6> <span id="last-update-time" class="font-weight-bolder text-dark"></span>
                         <br>
                         <h6 class="d-inline-block w-25 m-0">vị trí: </h6>
-                        <img id="loading-locate" src="../images/dot-loading.svg" style="display: inline-block; height: 24px;">
+                        <img id="loading-locate" src="../images/dot-loading.svg" style="display: none; height: 24px;">
                         <span id="last-update-place" class="font-weight-bolder text-dark"></span>
                     </div>
                 </div>

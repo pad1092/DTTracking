@@ -1,6 +1,7 @@
 var map = L.map('map').setView([21.0114975, 105.779181], 15);
 var customIcon = null;
 var htmlIcon = null;
+var markerType = "IMAGE";
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors'
 }).addTo(map);
@@ -13,11 +14,14 @@ function handleOutput(data){
         updateMap(positionData);
     }
 }
+function setMarkerType(type){
+    markerType = type
+}
 function setCustomIcon(imageURL){
     var customHtmlIcon = L.divIcon({
         className: 'custom-icon',
         html: `<div class="map__marker"><img id="map__marker-img" src="${imageURL}"></div>`,
-        iconSize: [32, 32], // size of the icon
+        iconSize: [24, 24], // size of the icon
         iconAnchor: [16, 16], // point of the icon which will correspond to marker's location
     });
     htmlIcon = customHtmlIcon;
@@ -32,10 +36,11 @@ function setCustomIcon(imageURL){
     customIcon = ci;
 }
 function updateMap(newPosition) {
+    console.log(markerType)
     // Clear existing markers
     clearExitMarker();
 
-    if (htmlIcon != null){
+    if (markerType === "IMAGE"){
         L.marker(newPosition, {icon: htmlIcon}).addTo(map);
     }
     else{

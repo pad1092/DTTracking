@@ -27,7 +27,8 @@ public class RouteHistoryDataService {
 
     @Value("${nominatim.osm.url}")
     private String OSM_API;
-
+    @Value("${time.save.position-data}")
+    private Long separateTime;
     public void handleIncomingData(String deviceId, String message) {
         String destination = "/device/" + deviceId;
         this.simpMessagingTemplate.convertAndSend(destination, message);
@@ -38,6 +39,7 @@ public class RouteHistoryDataService {
             DtTrackingApplication.devicePlaceData = new HashMap<>();
         JSONObject historyData = (JSONObject)DtTrackingApplication.devicePlaceData.get(deviceId);
         if (DtTrackingApplication.devicePlaceData.get(deviceId) != null) {
+
             String url = this.OSM_API + "lat=" + routeHistoryData.getLatitude() + "&lon=" + routeHistoryData.getLongitude();
             String currentPlaceID = (String)HttpExecutor.sendGetRequest(url, "place_id");
             Long lastTimeUpdated = (Long)historyData.get("timeUpdated");
@@ -53,12 +55,13 @@ public class RouteHistoryDataService {
                 this.routeHistoryDataRepository.save(routeHistoryData);
                 System.out.println("SAVE HISTORY DATA: different place");
             }
-            else if (System.currentTimeMillis() - lastTimeUpdated.longValue() >= 60000){
+            // SAVE DATA EVERY MINUTE
+            else if (System.currentTimeMillis() - lastTimeUpdated >= separateTime){
                 routeHistoryData.setRouteHistory(updatedRoute);
                 this.routeHistoryDataRepository.save(routeHistoryData);
                 System.out.println("SAVE HISTORY DATA: every one minute");
+                historyData.put("timeUpdated", System.currentTimeMillis());
             }
-            historyData.put("timeUpdated", System.currentTimeMillis());
             historyData.put("route", updatedRoute);
             historyData.put("placeID", currentPlaceID);
             historyData.put("longitude", routeHistoryData.getLongitude());

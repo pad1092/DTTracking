@@ -25,6 +25,7 @@ public class Alert {
     private Double latitude;
     private Double longitude;
     private int range;
+    private String type;
 
     @OneToMany(mappedBy = "alert", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<DeviceAlert> deviceAlertList;

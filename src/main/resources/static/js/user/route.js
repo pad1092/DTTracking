@@ -129,7 +129,7 @@ function displayCoordinateOnMap(coordinate){
         });
 
         let marker = L.marker(newPosition, {icon: customHtmlIcon})
-            .bindTooltip(`Thời gian: ${data[2]} \n Địa điểm: ${fetchDataPlaceDateForLabel(data[0], data[1])}`);
+            .bindTooltip(`Thời gian: ${data[2]}`);
         marker.addTo(map);
         listMaker.push(marker);
     })
@@ -227,33 +227,15 @@ async function fetchDataPlaceDate(lat, long) {
         console.error('Error:', error.message);
     }
 }
-async function fetchDataPlaceDateForLabel(lat, long) {
-    const apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${long}`;
-    try {
-        const response = await fetch(apiUrl);
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        const name = data.name;
-
-        return name;
-    } catch (error) {
-        console.error('Error:', error.message);
-    }
-
-}
 function convertStringToFormattedString(timestampAndDate) {
     // Split the string into timestamp and date components
     const [timestamp, dateString] = timestampAndDate.split(' ');
 
     // Extract components of the timestamp
-    const hours = Math.floor(Number(timestamp) / 10000) + 7;
+    let hours = Math.floor(Number(timestamp) / 10000) + 7;
     const minutes = Math.floor((Number(timestamp) % 10000) / 100);
     const seconds = Math.floor(Number(timestamp) % 100);
-
+    hours = Math.floor(hours / 24) + hours % 24 - 1;
     // Create a Date object from the date string
     const dateObject = new Date(dateString);
 
@@ -279,7 +261,7 @@ function convertAndFormatTime(inputValue, hoursToAdd) {
     const minutes = parseInt(inputValue.slice(2, 4), 10);
     const seconds = parseInt(inputValue.slice(4, 6), 10);
     let offsetHours = hours + 7;
-    offsetHours = Math.floor(offsetHours / 24) + offsetHours % 24;
+    offsetHours = Math.floor(offsetHours / 24) + offsetHours % 24 - 1;
     const formattedTime = `${offsetHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     return formattedTime;
 }

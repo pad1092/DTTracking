@@ -2,6 +2,7 @@ var subscription = null;
 var stompClient;
 var curPosition = null;
 var changedMsgConnecting = false;
+var lastConnectingStatus = "INVALID";
 var devicesMap = new Map();
 var listDangerZone = [];
 var circle1 = null;
@@ -45,9 +46,14 @@ function connectSocket(deviceID) {
         subscription = stompClient.subscribe(endpoint, function (messageOutput, headers) {
             curPosition = messageOutput.body;
             checkIsInsideDangerZone();
+            checkConnectingStatus(messageOutput.body);
             handleOutput(messageOutput.body);
         })
     });
+}
+function checkConnectingStatus (data){
+    let curStatus = "";
+
 }
 
 // Disconnect function
@@ -107,13 +113,15 @@ function displayDangerZone(){
 function hideDangerZone(){
     map.removeLayer(circle1);
     map.removeLayer(circle2);
+    circle1 = null;
+    circle2 = null;
 }
 
 function checkIsInsideDangerZone(){
     let coordinate = convertGPRMC(curPosition);
     if (coordinate == undefined || coordinate == null)
         return;
-    if (circle1 == null || circle2 == null)
+    if (circle1 == null || circle2 == null || circle1 == undefined || circle2 == undefined)
         return;
 
     if (isCoordinateInsideCircle(coordinate, circle1) == true){
@@ -145,4 +153,7 @@ function isCoordinateInsideCircle(coordinate, circle) {
     var circleRadius = circle.getRadius();
     var distance = circleCenter.distanceTo(coordinate);
     return distance <= circleRadius;
+}
+function changeMarkerType(value){
+    setMarkerType(value);
 }
