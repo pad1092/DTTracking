@@ -5,13 +5,14 @@ var changedMsgConnecting = false;
 var lastConnectingStatus = "INVALID";
 var devicesMap = new Map();
 var listDangerZone = [];
+var listCircle = [];
 var circle1 = null;
 var circle2 = null;
 // const API_URL = 'https://dttracking.phamanhduc.com/DTTracking/api'
 const API_URL = '/DTTracking/api'
 $(document).ready(function() {
     getListUserDevice();
-
+    getListDangerZone();
     // action for button danger zone
     $('#toggle').change(function() {
         // Check if the checkbox is checked
@@ -22,6 +23,20 @@ $(document).ready(function() {
         }
     });
 });
+function getListDangerZone(){
+    let url = API_URL + '/users/danger-zones';
+    $.get(url, function (dangerZones){
+        // listDangerZone = response;
+        dangerZones.forEach(function (dangerZone){
+            let coordinate = [dangerZone.latitude, dangerZone.longitude]
+            let circle = L.circle(coordinate, {
+                            radius: dangerZone.radius,
+                            className: 'danger-zone'
+                        })
+            listCircle.push(circle);
+        })
+    })
+}
 function getListUserDevice(){
     let endpoint = API_URL + '/users/devices';
     $.get(endpoint, function (devices){
@@ -93,58 +108,88 @@ function checkConnecting(){
 }
 
 function displayDangerZone(){
-    if (circle1 != null && circle2 != null){
-        circle1.addTo(map);
-        circle2.addTo(map);
-        return;
-    }
-    let coordinate1 = [21.011453333333332, 105.77917450000001];
-    let coordinate2 = [21.0227,105.7822];
-
-     circle1 = L.circle(coordinate1, {
-        radius: 500,
-         className: 'danger-zone'
-    }).addTo(map);
-     circle2 = L.circle(coordinate2, {
-        radius: 300,
-         className: 'danger-zone'
-    }).addTo(map);
+    listCircle.forEach(function (circle){
+        circle.addTo(map);
+    })
+    // if (circle1 != null && circle2 != null){
+    //     circle1.addTo(map);
+    //     circle2.addTo(map);
+    //     return;
+    // }
+    // let coordinate1 = [21.011453333333332, 105.77917450000001];
+    // let coordinate2 = [21.0227,105.7822];
+    //
+    //  circle1 = L.circle(coordinate1, {
+    //     radius: 500,
+    //      className: 'danger-zone'
+    // }).addTo(map);
+    //  circle2 = L.circle(coordinate2, {
+    //     radius: 300,
+    //      className: 'danger-zone'
+    // }).addTo(map);
 }
 function hideDangerZone(){
-    map.removeLayer(circle1);
-    map.removeLayer(circle2);
-    circle1 = null;
-    circle2 = null;
+    listCircle.forEach(function (circle){
+        map.removeLayer(circle);
+    })
+    // map.removeLayer(circle1);
+    // map.removeLayer(circle2);
+    // circle1 = null;
+    // circle2 = null;
 }
 
 function checkIsInsideDangerZone(){
     let coordinate = convertGPRMC(curPosition);
-    if (coordinate == undefined || coordinate == null)
-        return;
-    if (circle1 == null || circle2 == null || circle1 == undefined || circle2 == undefined)
+    if (listCircle.length === 0)
         return;
 
-    if (isCoordinateInsideCircle(coordinate, circle1) == true){
-        addBlinkingClass(0);
-    }
-    else {
-        removeBlinkingClass(0);
-    }
-    if (isCoordinateInsideCircle(coordinate, circle2) == true){
-        addBlinkingClass(1);
-    }
-    else {
-        removeBlinkingClass(1);
-    }
+    listCircle.forEach(function (circle, index){
+        if (isCoordinateInsideCircle(coordinate, circle) == true){
+            addBlinkingClass(index);
+        }
+        else {
+            removeBlinkingClass(index);
+        }
+        if (isCoordinateInsideCircle(coordinate, circle) == true){
+            addBlinkingClass(index);
+        }
+        else {
+            removeBlinkingClass(index);
+        }
+    })
+
+    // if (coordinate == undefined || coordinate == null)
+    //     return;
+    // if (circle1 == null || circle2 == null || circle1 == undefined || circle2 == undefined)
+    //     return;
+    //
+    // if (isCoordinateInsideCircle(coordinate, circle1) == true){
+    //     addBlinkingClass(0);
+    // }
+    // else {
+    //     removeBlinkingClass(0);
+    // }
+    // if (isCoordinateInsideCircle(coordinate, circle2) == true){
+    //     addBlinkingClass(1);
+    // }
+    // else {
+    //     removeBlinkingClass(1);
+    // }
 }
 function addBlinkingClass(index) {
     var zones = document.querySelectorAll('.danger-zone')
+    if (zones.length === 0){
+        return;
+    }
     let zone = zones[index];
     zone.classList.add('blinking');
 }
 
 function removeBlinkingClass(index) {
     var zones = document.querySelectorAll('.danger-zone')
+    if (zones.length === 0){
+        return;
+    }
     let zone = zones[index];
     zone.classList.remove('blinking');
 }

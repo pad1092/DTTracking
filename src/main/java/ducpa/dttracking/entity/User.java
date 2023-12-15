@@ -24,4 +24,7 @@ public class User {
 
     @OneToMany(mappedBy = "userDevice", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Device> userDevices;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<DangerZone> dangerZones;
 }

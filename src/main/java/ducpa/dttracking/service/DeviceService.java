@@ -1,5 +1,6 @@
 package ducpa.dttracking.service;
 
+import ducpa.dttracking.entity.DangerZone;
 import ducpa.dttracking.entity.Device;
 import ducpa.dttracking.entity.User;
 import ducpa.dttracking.repository.DeviceRepository;

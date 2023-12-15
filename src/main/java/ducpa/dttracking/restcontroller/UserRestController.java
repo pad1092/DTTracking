@@ -72,4 +72,11 @@ public class UserRestController {
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
                 .body(deviceService.activeListNewDevice(user, devices));
     }
+
+    @GetMapping("/users/danger-zones")
+    public ResponseEntity<?> getListDangerZone(Authentication authentication){
+        User user = utilService.getUserByRequest(authentication);
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
+                .body(userService.getDngerZoneList(user));
+    }
 }

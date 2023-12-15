@@ -1,6 +1,7 @@
 package ducpa.dttracking.restcontroller;
 
 import ducpa.dttracking.entity.Alert;
+import ducpa.dttracking.service.AlertService;
 import ducpa.dttracking.service.SchedulerService;
 import ducpa.dttracking.service.UtilService;
 import org.quartz.SchedulerException;
@@ -19,6 +20,8 @@ public class AlertRestController {
     private SchedulerService schedulerService;
     @Autowired
     private UtilService utilService;
+    @Autowired
+    private AlertService alertService;
     @PostMapping("/alerts")
     public ResponseEntity<?> createAleart(@RequestBody Alert alert, @RequestParam List<String> devicesID, Authentication authentication){
         System.out.println(alert);

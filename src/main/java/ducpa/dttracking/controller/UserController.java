@@ -20,8 +20,13 @@ public class UserController {
     public String userRoute(){
         return "user/route";
     }
-    @GetMapping("/users/notification-settings")
+    @GetMapping("/users/leave-position")
     public String setUpleart(){
         return "/user/setup-alert";
+    }
+
+    @GetMapping("/users/danger-zone")
+    public String dangerZone(){
+        return "/user/danger-zone";
     }
 }

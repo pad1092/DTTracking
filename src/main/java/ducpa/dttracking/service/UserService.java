@@ -1,5 +1,6 @@
 package ducpa.dttracking.service;
 
+import ducpa.dttracking.entity.DangerZone;
 import ducpa.dttracking.entity.Device;
 import ducpa.dttracking.entity.User;
 import ducpa.dttracking.repository.UserRepository;
@@ -48,6 +49,13 @@ public class UserService {
             device.setDeviceAlertList(null);
         });
         return devices;
+    }
+    public List<DangerZone> getDngerZoneList(User user){
+        List<DangerZone> dangerZones = user.getDangerZones();
+        dangerZones.forEach(dangerZone -> {
+            dangerZone.setUser(null);
+        });
+        return dangerZones;
     }
 
 }

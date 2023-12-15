@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Thiết lập cảnh báo thiết bị</title>
+  <title>Vùng nguy hiểm</title>
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
@@ -45,8 +45,8 @@
               <i class="fa-regular fa-bell mr-1"></i>
               Quản lý cảnh báo
               <div class="submenu">
-                <a th:href="@{/users/danger-zone}" class="submenu-item">Vùng nguy hiểm</a>
-                <a th:href="@{/users/leave-position}" class="submenu-item active">Di chuyển khỏi vị trí</a>
+                <a th:href="@{/users/danger-zone}" class="submenu-item active">Vùng nguy hiểm</a>
+                <a th:href="@{/users/leave-position}" class="submenu-item">Di chuyển khỏi vị trí</a>
               </div>
             </div>
           </li>
@@ -79,13 +79,13 @@
           <i class="fa-solid fa-location-crosshairs mr-1"></i>
           Theo dõi</a>
       </li>
-      <li class="mx-2 list-unstyled d-inline-block nav-item">
+      <li class="mx-2 list-unstyled d-inline-block nav-item active">
         <a th:href="@{/users/danger-zone}" class="nav-link ">
           <i class="fa-solid fa-bell mr-1"></i>
           Vùng nguy hiểm
         </a>
       </li>
-      <li class="mx-2 list-unstyled d-inline-block nav-item active">
+      <li class="mx-2 list-unstyled d-inline-block nav-item ">
         <a th:href="@{/users/leave-position}" class="nav-link">
           <i class="fa-solid fa-gear mr-1"></i>
           Di chuyển khỏi vị trí
@@ -110,54 +110,97 @@
   <h6 class="pt-5 text-uppercase f-w-bold text-center text-navy mb-4" style="width: max-content;">
     Quản lý cảnh báo
     <i class="fa-solid fa-chevron-right mx-2" style="font-size: 12px;"></i>
-    Thiết lập cảnh báo
+    Vùng nguy hiểm
   </h6>
   <div class="wr-f-500 align-items-center" style="display:flex">
   </div>
   <span id="response-msg" class="text-warning d-inline-block"></span>
-  <div class="btn btn-success mt-4" id="add-btn">Tạo cảnh báo</div>
+  <div class="btn btn-success mt-4" id="add-btn">Thêm mới</div>
   <div id="list-device" class="mt-4">
-    <table class="table table-hover border table-responsive-xl text-center" id="tbl-devices">
-      <thead>
+    <table class="table table-hover border table-responsive-lg text-center" id="danger-zones-tbl">
+      <thead class="bg-brown text-white">
       <tr>
         <th scope="col" class="col-2">STT</th>
         <th scope="col" class="col-2">Tên</th>
         <th scope="col" class="col-2">Mô tả</th>
-        <th scope="col" class="col-2">Thiết bị áp dụng</th>
+        <th scope="col" class="col-2">Bán kính (mét)</th>
         <th scope="col" class="col-2">Hành động</th>
       </tr>
       </thead>
       <tbody>
-      <tr>
-        <th scope="row">1</th>
-        <td>PTIT</td>
-        <td>Vị trí trường học</td>
-        <td>Duc 1, Duc 2</td>
-        <td class="d-flex justify-content-around">
-          <div class="d-inline-block mx-2 action-btn text-primary edit-btn">
-            <i class="fa-solid fa-pen text-primary"></i>
-            Sửa
-          </div>
-          <div class="d-inline-block mx-2 action-btn text-danger delete-btn" data-device-id="0001">
-            <i class="fa-solid fa-trash text-danger"></i>
-            Xóa
-          </div>
-        </td>
-      </tr>
+<!--      <tr>-->
+<!--        <th scope="row">1</th>-->
+<!--        <td>PTIT</td>-->
+<!--        <td>Bán kính 50m quanh PTIT</td>-->
+<!--        <td>50</td>-->
+<!--        <td class="d-flex justify-content-around">-->
+<!--          <div class="d-inline-block mx-2 action-btn text-primary edit-btn">-->
+<!--            <i class="fa-solid fa-pen text-primary"></i>-->
+<!--            Sửa-->
+<!--          </div>-->
+<!--          <div class="d-inline-block mx-2 action-btn text-danger delete-btn" data-device-id="0001">-->
+<!--            <i class="fa-solid fa-trash text-danger"></i>-->
+<!--            Xóa-->
+<!--          </div>-->
+<!--        </td>-->
+<!--      </tr>-->
       </tbody>
     </table>
   </div>
 </div>
-<!-- <div class="py-3" id="footer">
-    <div class="footer-wrapper">
+<!-- edit-->
+<div class="modal fade" id="ediDangerZoneModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-brown text-white">
+        <h5 class="modal-title text-center">Thêm vùng nguy hiểm</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Input fields for name and description -->
+        <form id="editDangerZoneForm">
+          <div class="d-flex w-100 mb-2">
+            <div class="w-50 mr-2">
+              <label for="itemName">Tên:</label>
+              <input type="text" class="form-control" id="editItemName" required>
+            </div>
+            <div class="w-50 ml-2">
+              <label for="itemDescription">Mô tả:</label>
+              <textarea class="form-control" id="editItemDescription" rows="1" required></textarea>
+            </div>
+          </div>
+          <div class="form-group mb-2">
+            <label for="alert-map">Chọn vị trí</label>
+            <div id="edit-alert-map" style="height: 400px;" class="mb-b"></div>
+          </div>
+          <div class="d-flex justify-content-center mb-3">
+            <div class="w-100 mr-2">
+              <label for="searchInput">Tìm vị trí</label>
+              <input class="form-control d-inline-block" type="text" id="edit-searchInput" placeholder="Nhập vị trí" onchange=searchEditLocation(value)>
+            </div>
+            <div class="w-100 ml-2">
+              <label for="limitInput">Phạm vi(mét)</label>
+              <input class="form-control d-inline-block" type="number" id="edit-limitInput" placeholder="Phạm phạm vi" oninput=inputEditLimit(value)>
+            </div>
+          </div>
+          <span id="msg-edit-zone" class="text-danger mt-2"></span>
+        </form>
+        <div class="d-flex justify-content-end">
+          <button id="edit-zone-btn" class="btn btn-primary mt-2" onclick="saveEditDangerZone()">Lưu</button>
+        </div>
+      </div>
     </div>
-</div> -->
-<!-- Modal ADD-->
+  </div>
+</div>
+
+<!--add modal-->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable modal-dialog modal-lg modal-dialog-centered" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add Item</h5>
+      <div class="modal-header bg-brown text-white">
+        <h5 class="modal-title text-center" id="exampleModalLabel">Thêm vùng nguy hiểm</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -165,61 +208,61 @@
       <div class="modal-body">
         <!-- Input fields for name and description -->
         <form id="addItemForm">
-          <div class="form-group">
-            <label for="itemName">Tên:</label>
-            <input type="text" class="form-control" id="itemName" required>
-          </div>
-          <div class="form-group">
-            <label for="itemDescription">Mô tả:</label>
-            <textarea class="form-control" id="itemDescription" rows="1" required></textarea>
-          </div>
-          <div class="form-group">
-            <label for="itemDescription">Thời gian bắt đầu:</label>
-            <input type="time" name="" id="sttime">
-            <label for="itemDescription">Thời gian kết thúc:</label>
-            <input type="time" name="" id="endtime">
-          </div>
-          <div class="form-group">
-            <label for="schedular">Lặp lại</label>
-            <select class="form-control" id="schedular">
-              <option value="onece">Một lần</option>
-              <option value="everyday">Hàng ngày</option>
-              <option value="2to6">Thứ 2 đến thứ 6</option>
-              <option value="7to8">Cuối tuần</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="list-result">Thiết bị</label>
-            <div class="">
-              <ul id="list-result" class="d-inline-block mx-2 mt-2 ">
-                <li deviceID="0001" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>
-                <li deviceID="0001" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>
-                <li deviceID="0001" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>
-                <li deviceID="0001" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>
-                <li deviceID="0001" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>
-                <li deviceID="0001" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>
-                <li deviceID="0001" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>
-                <li deviceID="0001" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>
-                <li deviceID="0001" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>
-                <li deviceID="0001" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>
-              </ul>
+          <div class="d-flex w-100 mb-2">
+            <div class="w-50 mr-2">
+              <label for="itemName">Tên:</label>
+              <input type="text" class="form-control" id="itemName" required>
+            </div>
+            <div class="w-50 ml-2">
+              <label for="itemDescription">Mô tả:</label>
+              <textarea class="form-control" id="itemDescription" rows="1" required></textarea>
             </div>
           </div>
-          <div class="form-group">
-            <label for="list-result">Chọn vị trí</label>
-            <div id="alert-map" style="height: 400px;"></div>
-            <label for="searchInput">Tìm vị trí</label>
-            <input class="form-control d-inline-block" type="text" id="searchInput" placeholder="Nhập vị trí" onchange=searchLocation(value)>
-            <label for="limitInput">Phạm vi(mét)</label>
-            <input class="form-control d-inline-block" type="number" id="limitInput" placeholder="Phạm phạm vi" oninput=inputLimit(value)>
+          <div class="form-group mb-2">
+            <label for="alert-map">Chọn vị trí</label>
+            <div id="alert-map" style="height: 400px;" class="mb-b"></div>
           </div>
-          <span id="msg-erorr" class="text-danger mt-2"></span>
+          <div class="d-flex justify-content-center mb-3">
+            <div class="w-100 mr-2">
+              <label for="searchInput">Tìm vị trí</label>
+              <input class="form-control d-inline-block" type="text" id="searchInput" placeholder="Nhập vị trí" onchange=searchLocation(value)>
+            </div>
+            <div class="w-100 ml-2">
+              <label for="limitInput">Phạm vi(mét)</label>
+              <input class="form-control d-inline-block" type="number" id="limitInput" placeholder="Phạm phạm vi" oninput=inputLimit(value)>
+            </div>
+          </div>
+          <span id="msg-add-zone" class="text-danger mt-2"></span>
         </form>
-        <button id="submit-btn" class="btn btn-primary mt-2">Thêm</button>
+        <div class="d-flex justify-content-end">
+          <button id="add-zone-btn" class="btn btn-primary mt-2" onclick="addDangerZone()">Thêm</button>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
+<!--confirm modal-->
+<div class="modal" tabindex="-1" role="dialog" id="deleteConfirmModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm Delete</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Bạn có chắc chắn muốn xóa không?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Xóa</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"
         integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw=="
@@ -230,7 +273,7 @@
 <script th:src="@{/js/main.js}"></script>
 <script th:src="@{/js/date-picker.js}"></script>
 <script th:src="@{/js/user/setup-alert.js}"></script>
-
+<script th:src="@{/js/user/danger-zone.js}"></script>
 </body>
 
 </html>

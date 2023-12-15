@@ -47,6 +47,7 @@ public class RouteHistoryDataService {
             RouteHistory updatedRoute = (RouteHistory)historyData.get("route");
             if (System.currentTimeMillis() - lastTimeUpdated.longValue() >= 1200000L) {
                 updatedRoute = this.routeHistoryService.createAndSaveNewRoute(deviceId);
+                routeHistoryData.setRouteHistory(updatedRoute);
                 this.routeHistoryDataRepository.save(routeHistoryData);
                 System.out.println("SAVE HISTORY DATA: new route");
             }
