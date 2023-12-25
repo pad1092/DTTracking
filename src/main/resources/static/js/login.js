@@ -1,4 +1,4 @@
-const API_URL = '/api'
+const API_URL = '/DTTracking/api'
 $(document).ready(function () {
     $("#loginForm").submit(function(event) {
         event.preventDefault();
@@ -32,7 +32,7 @@ function doSignUp(){
 
     let checkSubmit = false;
 
-    // Simple validation example (you can customize this based on your requirements)
+    // Simple validation example
     if (phone === "" || email === "" || password === "" || rePassword === "") {
         $("#errorMessage").text("Vui lòng điền đầy đủ thông tin.");
         return;
@@ -79,4 +79,37 @@ function doSignUp(){
     }).fail(function () {
         console.log("fail")
     });
+}
+
+function doFoget(){
+    $("#errorMessage").text("");
+    var phone = $("#username").val();
+    var email = $("#email").val();
+
+    // Simple validation example
+    if (phone === "" || email === "" ) {
+        $("#errorMessage").text("Vui lòng điền đầy đủ thông tin.");
+        return;
+    }
+    $('#reset-loading').css('display', 'inline-block');
+    let uri = `phone=${phone}&email=${email}`;
+    uri = encodeURIComponent(uri);
+    console.log(uri);
+    let url = `${API_URL}/users/reset-password?${uri}`;
+
+    $.ajax(url, function (response){
+
+    }).done(function (response){
+        console.log(response);
+        if (response === true){
+            $("#errorMessage").text("Mật khẩu mới đã được gửi đến email của bạn, vui lòng kiểm tra");
+        }
+        else{
+            $("#errorMessage").text("Thông tin chưa được đăng ký hoặc không chính xác");
+        }
+        $('#reset-loading').css('display', 'none');
+    }).fail(function (){
+        $("#errorMessage").text("Đã có lỗi xảy ra, vui lòng thử lại sau.");
+        $('#reset-loading').css('display', 'none');
+    })
 }

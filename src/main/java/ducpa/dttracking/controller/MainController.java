@@ -25,6 +25,11 @@ public class MainController {
         return "redirect:/login";
     }
 
+    @GetMapping("/forget-password")
+    public String forgetPassword(){
+        return "/forget-password";
+    }
+
     @GetMapping("/home")
     public String home(Authentication authentication){
         if (authentication == null){
