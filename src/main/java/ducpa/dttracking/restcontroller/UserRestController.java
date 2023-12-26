@@ -80,9 +80,9 @@ public class UserRestController {
                 .body(userService.getDngerZoneList(user));
     }
 
-    @GetMapping("/users/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestParam String phone, @RequestParam String email){
-        System.out.println("RESET" + phone +  "-" + email);
-        return ResponseEntity.ok(userService.resetPassword(email, phone));
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword( @RequestBody User user, @RequestParam String otp, @RequestParam String email){
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
+                .body(userService.resetPassword(email, otp, user.getPassword()));
     }
 }

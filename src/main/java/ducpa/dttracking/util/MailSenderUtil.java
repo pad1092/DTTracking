@@ -15,7 +15,7 @@ public class MailSenderUtil {
         MimeMessage mimeMailMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMailMessage, "utf-8");
         try {
-            helper.setFrom("PADSHOP");
+            helper.setFrom("DTTracking");
             helper.setSubject(subject);
             helper.setText(message, true);
             helper.setTo(receiver);

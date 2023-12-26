@@ -5,6 +5,7 @@ import ducpa.dttracking.entity.Device;
 import ducpa.dttracking.entity.User;
 import ducpa.dttracking.repository.UserRepository;
 import ducpa.dttracking.util.MailSenderUtil;
+import ducpa.dttracking.util.OptUtil;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,7 +21,7 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
-    private UtilService utilService;
+    private OptUtil optUtil;
     @Autowired
     private MailSenderUtil mailSender;
 
@@ -61,32 +62,31 @@ public class UserService {
         });
         return dangerZones;
     }
-
-    public boolean resetPassword(String email, String phone) {
-        User user = userRepository.findByEmailAndPhone(email, phone);
-        if (user == null)
+    public boolean resetPassword(String email, String otp, String password){
+        if (!otp.equalsIgnoreCase(optUtil.getOtp(email)))
             return false;
-        String newPass = randomCharacter(6);
-        String text = "<h4>Yêu cầu đặt lại mật khẩu của bạn đã được thực hiện.</h4>" +
-                "<p>Mật khẩu mới của bạn là: <span style=\"color: red;\">" + newPass + "</span> <br />\n";
-        String subject = "Quên mật khẩu";
-        mailSender.sendMail(email, subject, text);
-
-//        newPass = passwordEncoder.encode(newPass);
-//        user.setPassword(newPass);
-//        userRepository.saveAndFlush(user);
-
+        User user = userRepository.findByEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
         return true;
     }
 
-    private String randomCharacter(int length) {
-        String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        String res = "";
-        Random random = new Random();
-        for (int i = 0; i < length; i++) {
-            res += alphabet.charAt(random.nextInt(alphabet.length()));
-        }
-        return res;
+    public boolean resetPassword(String email) {
+        User user = userRepository.findByEmail(email);
+        if (user == null)
+            return false;
+        optUtil.clearOtp(email);
+        String optCode = optUtil.getOtp(email);
+        String text =
+                "<h3>Yêu cầu đặt lại mật khẩu của bạn đã được thực hiện.</h3>" +
+                "<h4>Vui lòng không tiết lộ mã OTP cho bất kì ai, mã OTP có hiệu lực trong vòng 5 phút</h4>" +
+                "<div style=\"display: flex; line-height: 40px;\">Mã OTP: <div style=\"color: rgb(202, 81, 0); line-height: 40px; padding: 0 8px; border-radius: 8px;margin-left: 8px; background-color: #dfdfdf; font-size: 20px; font-weight: 600;\">"+
+                        optCode+
+                 "</div></div>\n";
+        String subject = "Đặt lại mật mật khẩu";
+        mailSender.sendMail(email, subject, text);
+        return true;
     }
+
 
 }

@@ -1,4 +1,6 @@
 const API_URL = '/DTTracking/api'
+var email = "";
+var opt = "";
 $(document).ready(function () {
     $("#loginForm").submit(function(event) {
         event.preventDefault();
@@ -25,10 +27,10 @@ function doSignUp(){
     $("#errorMessage").text("");
 
     // Get input values
-    var phone = $("#username").val();
-    var email = $("#email").val();
-    var password = $("#password").val();
-    var rePassword = $("#re-password").val();
+    var phone = $.trim($("#username").val());
+    var email = $.trim($("#email").val());
+    var password = $.trim($("#password").val());
+    var rePassword = $.trim($("#re-password").val());
 
     let checkSubmit = false;
 
@@ -83,26 +85,25 @@ function doSignUp(){
 
 function doFoget(){
     $("#errorMessage").text("");
-    var phone = $("#username").val();
-    var email = $("#email").val();
+    email = $("#email").val();
 
     // Simple validation example
-    if (phone === "" || email === "" ) {
+    if (email === "") {
         $("#errorMessage").text("Vui lòng điền đầy đủ thông tin.");
         return;
     }
     $('#reset-loading').css('display', 'inline-block');
-    let uri = `phone=${phone}&email=${email}`;
-    uri = encodeURIComponent(uri);
-    console.log(uri);
-    let url = `${API_URL}/users/reset-password?${uri}`;
+    email = encodeURIComponent(email);
+    let url = `${API_URL}/generate-otp?email=${email}`;
 
     $.ajax(url, function (response){
 
     }).done(function (response){
         console.log(response);
         if (response === true){
-            $("#errorMessage").text("Mật khẩu mới đã được gửi đến email của bạn, vui lòng kiểm tra");
+            $('#optErrorMessage').text('');
+            $('#frm-input-email').css('display', 'none');
+            $('#frm-input-otp').css('display', 'block');
         }
         else{
             $("#errorMessage").text("Thông tin chưa được đăng ký hoặc không chính xác");
@@ -111,5 +112,57 @@ function doFoget(){
     }).fail(function (){
         $("#errorMessage").text("Đã có lỗi xảy ra, vui lòng thử lại sau.");
         $('#reset-loading').css('display', 'none');
+    })
+}
+
+function validateOpt(){
+    $('#optErrorMessage').text('');
+    opt = $('#otp').val();
+    let url = `${API_URL}/validate-otp?email=${email}&otp=${opt}`;
+    $.ajax(url, function (response){
+    }).done(function (response){
+        if (response === true){
+            $('#frm-input-otp').css('display', 'none');
+            $('#frm-change-password').css('display', 'block');
+            $('#changePassErrorMessage').text('');
+        }
+        else{
+            $('#optErrorMessage').text("Mã OPT không chính xác hoặc đã hết hiệu lực, vui lòng thử lại")
+        }
+    }).fail(function (response){
+        $("#optErrorMessage").text("Đã có lỗi xảy ra, vui lòng thử lại sau.");
+    })
+}
+
+function changePassword(){
+    let password = $.trim($('#password').val());
+    let rePassword = $.trim($('#repassword').val());
+
+    var passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{6,}$/;
+    if (!passwordRegex.test(password)) {
+        $("#changePassErrorMessage").text("Mật khẩu cần phải chứa ít nhất một số, một chữ cái, và tối thiểu 6 kí tự.");
+        return;
+    }
+    if (password !== rePassword) {
+        $("#changePassErrorMessage").text("Mật khẩu không khớp.");
+        return;
+    }
+    let url = `${API_URL}/reset-password?otp=${opt}&email=${email}`;
+    let user = {
+        email: email,
+        password: password
+    }
+    $.ajax({
+        url: url,
+        method: "POST",
+        contentType: 'application/json',
+        data: JSON.stringify(user),
+        success: function (response){
+            $('#frm-change-password').css('display', 'none');
+            $('#frm-change-success').css('display', 'block');
+        },
+        error: function (){
+            $("#changePassErrorMessage").text("Đã có lỗi xảy ra, vui lòng thử lại sau.");
+        }
     })
 }
