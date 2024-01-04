@@ -11,6 +11,13 @@ html {
 .modal{
     animation: fade-in .2s ease-in-out;
 }
+.modal-title{
+    color: var(--text-primary) !important;
+    font-weight: 600;
+}
+.modal-header{
+    border-bottom: none;
+}
 .close:hover{
     background-color: var(--text-primary);
     color: white;
