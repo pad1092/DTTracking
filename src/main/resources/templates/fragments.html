@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="profile-modal">
+    <div class="modal" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog modal-sm modal-dialog-centered" role="document" >
+            <div class="modal-content" style="border: 1px solid var(--text-primary); width: 400px;">
+                <div class="modal-header" style="border-bottom: none">
+                    <h5 class="modal-title text-center f-w-bold">Thông tin tài khoản</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Input fields for name and description -->
+                    <form >
+                        <div class="w-100 mb-3 d-flex ">
+                            <h6 class="w-25 m-0 " >Tên</h6>
+                            <input type="text" class="form-control" id="fullname" required>
+                        </div>
+                        <div class="w-100 mb-3 d-flex ">
+                            <h6 class="w-25 m-0 " >Email</h6>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+                        <div class="form-group mb-2 d-flex ">
+                            <h6 class="w-25 m-0 " >Số điện thoại</h6>
+                            <input type="phonenumber" class="form-control" id="phonenumber" required>
+                        </div>
+                    </form>
+                    <span id="profile-response" class="text-orange mt-2 msg-response">msg-response</span>
+                    <div class="d-flex justify-content-end mb-3 pt-3">
+                        <button class="btn btn-outline-primary mt-2 w-100" onclick="saveEditDangerZone()" style="border:1px solid var(--text-primary); color: var(--text-primary);">Cập nhật</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- CHANGE PASS MODAL -->
+    <div class="modal" id="passwordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog modal-sm modal-dialog-centered" role="document" >
+            <div class="modal-content" style="border: 1px solid var(--text-primary); width: 400px;">
+                <div class="modal-header" style="border-bottom: none">
+                    <h5 class="modal-title text-center f-w-bold text-white">Đổi mật khẩu</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Input fields for name and description -->
+                    <form >
+                        <div class="w-100 mb-3 d-flex ">
+                            <h6 class="w-50 m-0 " >Mật khẩu cũ</h6>
+                            <input type="password" class="form-control" id="oldpassword" required>
+                        </div>
+                        <div class="w-100 mb-3 d-flex ">
+                            <h6 class="w-50 m-0 " >Mật khẩu mới</h6>
+                            <input type="password" class="form-control" id="password" required>
+                        </div>
+                        <div class="form-group mb-2 d-flex">
+                            <h6 class="w-50 m-0 " >Xác nhận mật khẩu mới</h6>
+                            <input type="password" class="form-control" id="repassword" required>
+                        </div>
+                    </form>
+                    <span id="changepass-response" class="text-orange mt-2 msg-response">msg-response</span>
+                    <div class="d-flex justify-content-end mb-3 pt-3">
+                        <button class="btn btn-outline-primary mt-2 w-100" onclick="saveEditDangerZone()" style="border:1px solid var(--text-primary); color: var(--text-primary);">Cập nhật</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

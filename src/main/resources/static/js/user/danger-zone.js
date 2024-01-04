@@ -1,4 +1,4 @@
-const API_URL = '/DTTracking/api'
+const API_URL = '/api'
 var dangerZoneList = [];
 var dangerZoneSelected = null;
 $(document).ready(function (){

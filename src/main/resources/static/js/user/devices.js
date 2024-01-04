@@ -1,5 +1,5 @@
 // const API_URL = 'https://dttracking.phamanhduc.com/DTTracking/api'
-const API_URL = '/DTTracking/api'
+const API_URL = '/api'
 $(document).ready(function (){
   renderTableDevices();
   addNewDevice();

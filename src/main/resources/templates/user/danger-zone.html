@@ -66,6 +66,7 @@
           <i class="fa-solid fa-user"></i>
           <div class="py-2" id="user-profile">
             <span class="user-profile-item d-inline-block w-100 py-1 pl-3" onclick="dislayProfileModal()">Thông tin tài khoản</span>
+            <span class="user-profile-item d-inline-block w-100 py-1 pl-3" onclick="changePassModal()">Đổi mật khẩu</span>
             <a th:href="@{/logout}" class="user-profile-item d-inline-block w-100 py-1 pl-3 text-white">Đăng xuất</a>
           </div>
         </div>
@@ -107,6 +108,12 @@
           Tài khoản
         </a>
       </li>
+      <li class="mx-2 list-unstyled d-inline-block nav-item" onclick="changePassModal()">
+        <a  class="nav-link">
+          <i class="fa-solid fa-user"></i>
+          Đổi mật khẩu
+        </a>
+      </li>
       <li class="mx-2 list-unstyled d-inline-block nav-item">
         <a th:href="@{/logout}" class="nav-link">
           <i class="fa-solid fa-right-from-bracket"></i>
@@ -126,8 +133,8 @@
   </div>
   <span id="response-msg" class="text-warning d-inline-block"></span>
   <div class="btn btn-success mt-4" id="add-btn">Thêm mới</div>
-  <div id="list-device" class="mt-4">
-    <table class="table table-hover border table-responsive-lg text-center" id="danger-zones-tbl">
+  <div id="list-device" class="mt-4" style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;">
+    <table class="bg-light table table-hover border table-responsive-lg text-center" id="danger-zones-tbl">
       <thead class="bg-brown text-white">
       <tr>
         <th scope="col" class="col-2">STT</th>
@@ -158,6 +165,7 @@
     </table>
   </div>
 </div>
+<div th:replace="fragments :: profile-modal"></div>
 <!-- edit-->
 <div class="modal" id="ediDangerZoneModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable modal-dialog modal-lg modal-dialog-centered" role="document">

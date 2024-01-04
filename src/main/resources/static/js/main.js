@@ -48,3 +48,9 @@ function smoothScroll(){
     });
 });
 }
+function dislayProfileModal(){
+    $('#profileModal').modal('show')
+}
+function changePassModal(){
+    $('#passwordModal').modal('show')
+}

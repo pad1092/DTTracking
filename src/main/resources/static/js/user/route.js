@@ -1,4 +1,4 @@
-const API_URL = '/DTTracking/api'
+const API_URL = '/api'
 var listRouteHistory = []
 var displayByCoordinate = false;
 var listMaker = [];

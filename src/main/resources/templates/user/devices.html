@@ -65,6 +65,7 @@
                     <i class="fa-solid fa-user"></i>
                     <div class="py-2" id="user-profile">
                         <span class="user-profile-item d-inline-block w-100 py-1 pl-3" onclick="dislayProfileModal()">Thông tin tài khoản</span>
+                        <span class="user-profile-item d-inline-block w-100 py-1 pl-3" onclick="changePassModal()">Đổi mật khẩu</span>
                         <a th:href="@{/logout}" class="user-profile-item d-inline-block w-100 py-1 pl-3 text-white">Đăng xuất</a>
                     </div>
                 </div>
@@ -106,6 +107,12 @@
                     Tài khoản
                 </a>
             </li>
+            <li class="mx-2 list-unstyled d-inline-block nav-item" onclick="changePassModal()">
+                <a  class="nav-link">
+                    <i class="fa-solid fa-user"></i>
+                    Đổi mật khẩu
+                </a>
+            </li>
             <li class="mx-2 list-unstyled d-inline-block nav-item">
                 <a th:href="@{/logout}" class="nav-link">
                     <i class="fa-solid fa-right-from-bracket"></i>
@@ -123,7 +130,7 @@
     </h6>
     <div class="btn btn-success" id="add-btn">Thiết bị mới</div>
     <div id="list-device" class="mt-4" style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;">
-        <table class="table table-hover border table-responsive-xl text-center table-striped " id="tbl-devices">
+        <table class="bg-light table table-hover border table-responsive-xl text-center table-striped " id="tbl-devices">
             <thead class="bg-brown text-white">
             <tr>
                 <th scope="col" class="col-1">STT</th>
@@ -231,7 +238,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title text-white">Kích hoạt thiết bị mới</h5>
+                        <h5 class="modal-title">Kích hoạt thiết bị mới</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -305,6 +312,7 @@
         </div>
     </div> -->
 </div>
+<div th:replace="fragments :: profile-modal"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
 <script th:src="@{/js/main.js}"></script>

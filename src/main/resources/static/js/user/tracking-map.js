@@ -10,7 +10,6 @@ function handleOutput(data){
     console.log(data);
     let positionData = convertGPRMC(data);
     if (positionData != undefined) {
-        console.log(positionData);
         updateMap(positionData);
     }
 }
@@ -60,6 +59,8 @@ function clearExitMarker(){
 }
 
 function convertGPRMC(gprmcData) {
+    if (gprmcData.includes(",A,") == false)
+        return;
     var gprmcComponents = gprmcData.split(',');
     // Check if latitude and longitude fields are not empty
     if (gprmcComponents[3] == null || gprmcComponents[3] == '' || gprmcComponents[3] == undefined)

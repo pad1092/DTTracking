@@ -67,6 +67,7 @@
                     <i class="fa-solid fa-user"></i>
                     <div class="py-2" id="user-profile">
                         <span class="user-profile-item d-inline-block w-100 py-1 pl-3" onclick="dislayProfileModal()">Thông tin tài khoản</span>
+                        <span class="user-profile-item d-inline-block w-100 py-1 pl-3" onclick="changePassModal()">Đổi mật khẩu</span>
                         <a th:href="@{/logout}" class="user-profile-item d-inline-block w-100 py-1 pl-3 text-white">Đăng xuất</a>
                     </div>
                 </div>
@@ -106,6 +107,12 @@
                 <a  class="nav-link">
                     <i class="fa-solid fa-user"></i>
                     Tài khoản
+                </a>
+            </li>
+            <li class="mx-2 list-unstyled d-inline-block nav-item" onclick="changePassModal()">
+                <a  class="nav-link">
+                    <i class="fa-solid fa-user"></i>
+                    Đổi mật khẩu
                 </a>
             </li>
             <li class="mx-2 list-unstyled d-inline-block nav-item">
@@ -179,6 +186,7 @@
         <div id="map" class="col-lg-8 mb-4 mt-0 p-0"></div>
     </div>
 </div>
+<div th:replace="fragments :: profile-modal"></div>
 <!-- <div class="py-3" id="footer">
     <div class="footer-wrapper">
     </div>

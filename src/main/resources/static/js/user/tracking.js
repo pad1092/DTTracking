@@ -9,7 +9,7 @@ var listCircle = [];
 var circle1 = null;
 var circle2 = null;
 // const API_URL = 'https://dttracking.phamanhduc.com/DTTracking/api'
-const API_URL = '/DTTracking/api'
+const API_URL = '/api'
 $(document).ready(function() {
     getListUserDevice();
     getListDangerZone();
@@ -53,7 +53,7 @@ function getListUserDevice(){
 }
 
 function connectSocket(deviceID) {
-    var socket = new SockJS("/DTTracking/gps-socket");
+    var socket = new SockJS("/gps-socket");
     stompClient = Stomp.over(socket);
     stompClient.debug = null;
     stompClient.connect({}, function (frame) {

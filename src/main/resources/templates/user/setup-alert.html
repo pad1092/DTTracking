@@ -66,6 +66,7 @@
           <i class="fa-solid fa-user"></i>
           <div class="py-2" id="user-profile">
             <span class="user-profile-item d-inline-block w-100 py-1 pl-3" onclick="dislayProfileModal()">Thông tin tài khoản</span>
+            <span class="user-profile-item d-inline-block w-100 py-1 pl-3" onclick="changePassModal()">Đổi mật khẩu</span>
             <a th:href="@{/logout}" class="user-profile-item d-inline-block w-100 py-1 pl-3 text-white">Đăng xuất</a>
           </div>
         </div>
@@ -107,6 +108,12 @@
           Tài khoản
         </a>
       </li>
+      <li class="mx-2 list-unstyled d-inline-block nav-item" onclick="changePassModal()">
+        <a  class="nav-link">
+          <i class="fa-solid fa-user"></i>
+          Đổi mật khẩu
+        </a>
+      </li>
       <li class="mx-2 list-unstyled d-inline-block nav-item">
         <a th:href="@{/logout}" class="nav-link">
           <i class="fa-solid fa-right-from-bracket"></i>
@@ -126,8 +133,8 @@
   </div>
   <span id="response-msg" class="text-warning d-inline-block"></span>
   <div class="btn btn-success mt-4" id="add-btn">Tạo cảnh báo</div>
-  <div id="list-device" class="mt-4">
-    <table class="table table-hover border table-responsive-xl text-center" id="tbl-devices">
+  <div id="list-device" class="mt-4" style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;">
+    <table class="bg-light table table-hover border table-responsive-xl text-center" id="tbl-devices">
       <thead>
       <tr>
         <th scope="col" class="col-2">STT</th>
@@ -229,6 +236,7 @@
       </div>
     </div>
   </div>
+  <div th:replace="fragments :: profile-modal"></div>
 </div>
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"
