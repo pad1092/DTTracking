@@ -60,6 +60,9 @@ function connectSocket(deviceID) {
         let endpoint = "/device/" + deviceID;
         subscription = stompClient.subscribe(endpoint, function (messageOutput, headers) {
             curPosition = messageOutput.body;
+            if (curPosition.includes(",V,")){
+                return;
+            }
             checkIsInsideDangerZone();
             checkConnectingStatus(messageOutput.body);
             handleOutput(messageOutput.body);

@@ -62,9 +62,13 @@
                     <i class="fa-solid fa-bars" style="color: #232424;"></i>
                 </div>
             </div>
-            <a href="/users/profile">
+            <a>
                 <div class="header-user">
                     <i class="fa-solid fa-user"></i>
+                    <div class="py-2" id="user-profile">
+                        <span class="user-profile-item d-inline-block w-100 py-1 pl-3" onclick="dislayProfileModal()">Thông tin tài khoản</span>
+                        <a th:href="@{/logout}" class="user-profile-item d-inline-block w-100 py-1 pl-3 text-white">Đăng xuất</a>
+                    </div>
                 </div>
             </a>
         </div>
@@ -98,9 +102,17 @@
                     Lộ trình
                 </a>
             </li>
+            <li class="mx-2 list-unstyled d-inline-block nav-item" onclick="dislayProfileModal()">
+                <a  class="nav-link">
+                    <i class="fa-solid fa-user"></i>
+                    Tài khoản
+                </a>
+            </li>
             <li class="mx-2 list-unstyled d-inline-block nav-item">
-                <i class="fa-solid fa-user"></i>
-                <a th:href="@{/users/profile}" class="nav-link">Tài khoản</a>
+                <a th:href="@{/logout}" class="nav-link">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    Đăng xuất
+                </a>
             </li>
         </div>
     </div>

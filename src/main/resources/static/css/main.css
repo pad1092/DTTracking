@@ -8,7 +8,13 @@ html {
     scroll-padding-top: 60px;
     scroll-behavior: smooth;
 }
-
+.modal{
+    animation: fade-in .2s ease-in-out;
+}
+.close:hover{
+    background-color: var(--text-primary);
+    color: white;
+}
 /* -------HEADER---------- */
 #header {
     position: sticky;
@@ -18,7 +24,40 @@ html {
     background-color: white;
     backdrop-filter: opacity(0.5);
 }
-
+.header-user{
+    cursor: pointer;
+    position: relative;
+    width: 30px;
+}
+.header-user::before{
+    width: 10px;
+    height: 32px;
+    content: "";
+    /* background-color: black; */
+    position: absolute;
+    right: 0;
+}
+.header-user:hover > i{
+    color: var(--text-primary)
+}
+.header-user:hover > #user-profile{
+    display: block;
+}
+#user-profile{
+    display: none;
+    color: white;
+    background-color: #c0504c;
+    right: 10px;
+    width: 200px;
+    position: absolute;
+    border-radius: 4px;
+}
+.user-profile-item:hover{
+    backdrop-filter: brightness(0.8);
+}
+.user-profile-item{
+    font-size: 16px !important;
+}
 .header a {
     text-decoration: none;
     color:  var(--text-navy);

@@ -55,6 +55,7 @@ public class RouteHistoryDataService {
                 routeHistoryData.setRouteHistory(updatedRoute);
                 this.routeHistoryDataRepository.save(routeHistoryData);
                 System.out.println("SAVE HISTORY DATA: different place");
+                historyData.put("timeUpdated", System.currentTimeMillis());
             }
             // SAVE DATA EVERY MINUTE
             else if (System.currentTimeMillis() - lastTimeUpdated >= separateTime){

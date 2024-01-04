@@ -235,7 +235,7 @@ function convertStringToFormattedString(timestampAndDate) {
     let hours = Math.floor(Number(timestamp) / 10000) + 7;
     const minutes = Math.floor((Number(timestamp) % 10000) / 100);
     const seconds = Math.floor(Number(timestamp) % 100);
-    hours = Math.floor(hours / 24) + hours % 24 - 1;
+    hours = Math.floor(hours / 24) + hours % 24 ;
     // Create a Date object from the date string
     const dateObject = new Date(dateString);
 
@@ -261,7 +261,7 @@ function convertAndFormatTime(inputValue, hoursToAdd) {
     const minutes = parseInt(inputValue.slice(2, 4), 10);
     const seconds = parseInt(inputValue.slice(4, 6), 10);
     let offsetHours = hours + 7;
-    offsetHours = Math.floor(offsetHours / 24) + offsetHours % 24 - 1;
+    offsetHours = Math.floor(offsetHours / 24) + offsetHours % 24;
     const formattedTime = `${offsetHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     return formattedTime;
 }

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" ><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <title>404</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+    <link rel="shortcut icon" th:href="@{/images/logo.png}" type="image/x-icon">
+</head>
+
+<body th:style="'background-image: url(' + @{/images/bg.png} + ') '">
+<div id="main">
+    <div style="height: 10vh;"></div>
+    <h2 class="text-center text-white py-4 ">Không tìm thấy trang</h2>
+    <div style="width: fit-content; margin: auto;">
+        <img style="width: 100px; padding: 0 4px; border-bottom: 1px solid white; border-radius: 50%;" th:src="@{/images/cat1.png}" alt="">
+        <img style="width: 100px; padding: 0 4px; border-top: 1px solid white; border-radius: 50%;" th:src="@{/images/cat2.png}" alt="">
+        <img style="width: 100px; padding: 0 4px; border-bottom: 1px solid white; border-radius: 50%;" th:src="@{/images/cat3.png}" alt="">
+    </div>
+    <a th:href="@{/}" class="btn" style="border: 1px solid white; color: white; display: block; margin: auto; width: 200px; margin-top: 30px; backdrop-filter: brightness(0.8); cursor: pointer;">Trang chủ</a>
+</div>
+</body>
+</html>
