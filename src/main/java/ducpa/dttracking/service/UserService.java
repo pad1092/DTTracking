@@ -80,7 +80,7 @@ public class UserService {
         if (!passwordEncoder.matches(userDTO.getOldPassword(), user.getPassword())){
             return false;
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         userRepository.save(user);
         return true;
     }
