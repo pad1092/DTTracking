@@ -26,6 +26,9 @@ html {
     background-color: var(--text-primary);
     color: white;
 }
+.msg-response{
+    visibility: hidden;
+}
 /* -------HEADER---------- */
 #header {
     position: sticky;
@@ -167,7 +170,7 @@ html {
 }
 
 .submenu-item:hover {
-    background-color: #f1f1f1;
+    color: var(--text-primary) !important;
 }
 
 .nav-item:hover .submenu {

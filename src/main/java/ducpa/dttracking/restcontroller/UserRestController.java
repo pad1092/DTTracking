@@ -2,6 +2,7 @@ package ducpa.dttracking.restcontroller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ducpa.dttracking.dto.UserDTO;
 import ducpa.dttracking.entity.Device;
 import ducpa.dttracking.entity.User;
 import ducpa.dttracking.service.DeviceService;
@@ -84,5 +85,24 @@ public class UserRestController {
     public ResponseEntity<?> resetPassword( @RequestBody User user, @RequestParam String otp, @RequestParam String email){
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
                 .body(userService.resetPassword(email, otp, user.getPassword()));
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<?> getUserProfile(Authentication authentication){
+        User user = utilService.getUserByRequest(authentication);
+        user.setDangerZones(null);
+        user.setUserDevices(null);
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
+                .body(utilService.getUserByRequest(authentication));
+    }
+    @PutMapping("/users")
+    public ResponseEntity<?> updateUserProfile(Authentication authentication, @RequestBody User user){
+        userService.updateProfile(utilService.getUserByRequest(authentication), user);
+        return ResponseEntity.ok("success");
+    }
+
+    @PostMapping("/users/update-password")
+    public ResponseEntity<?> updatePassword (Authentication authentication, @RequestBody UserDTO userDTO){
+        return ResponseEntity.ok(userService.updatePassword(utilService.getUserByRequest(authentication), userDTO));
     }
 }

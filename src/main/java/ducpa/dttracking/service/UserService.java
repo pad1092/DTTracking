@@ -1,5 +1,6 @@
 package ducpa.dttracking.service;
 
+import ducpa.dttracking.dto.UserDTO;
 import ducpa.dttracking.entity.DangerZone;
 import ducpa.dttracking.entity.Device;
 import ducpa.dttracking.entity.User;
@@ -30,7 +31,12 @@ public class UserService {
         user.setRole("ROLE_USER");
         userRepository.save(user);
     }
-
+    public void updateProfile(User oldUser, User user){
+        oldUser.setFullname(user.getFullname());
+        oldUser.setEmail(user.getEmail());
+        oldUser.setPhone(user.getPhone());
+        userRepository.save(oldUser);
+    }
     public JSONObject checkExit(String phone, String email){
         boolean checkEmail = true;
         boolean checkPhone = true;
@@ -67,6 +73,14 @@ public class UserService {
             return false;
         User user = userRepository.findByEmail(email);
         user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
+        return true;
+    }
+    public boolean updatePassword (User user, UserDTO userDTO){
+        if (!passwordEncoder.matches(userDTO.getOldPassword(), user.getPassword())){
+            return false;
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return true;
     }
