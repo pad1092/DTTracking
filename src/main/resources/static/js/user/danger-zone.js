@@ -39,12 +39,26 @@ function addDangerZone(){
         data: JSON.stringify(dangerZone),
         success: function (response){
             $('#myModal').modal('hide');
+            clearAddModal();
+            clearMap();
             displayDangerZoneTable();
         },
         error: function (response){
             $('#msg-add-zone').text("Đã có lỗi xảy ra, vui lòng thử lại sau")
         }
     })
+}
+function clearMap(){
+    map.removeLayer(userCircle);
+    map.removeLayer(userMarker);
+    editMap.removeLayer(userCircle);
+    editMap.removeLayer(userMarker);
+}
+function clearAddModal(){
+    $('#searchInput').val('');
+    $('#limitInput').val(0);
+    $('#itemDescription').val('');
+    $('#itemName').val('');
 }
 function displayDangerZoneTable(){
     let url = API_URL + '/users/danger-zones'
@@ -78,6 +92,7 @@ function renderTable(){
     })
 }
 function editDangerZone(index){
+    clearMapAfterShowModal();
     dangerZoneSelected = dangerZoneList[index];
 
     coordinate = [dangerZoneSelected.latitude, dangerZoneSelected.longitude];
@@ -89,7 +104,7 @@ function editDangerZone(index){
     $('#editItemDescription').text(dangerZoneSelected.description);
 
     $('#ediDangerZoneModal').modal('show');
-    console.log(index);
+    console.log(`INDEX OF ROW ${index}`);
 }
 function deleteDangerZone(index){
     // Show the delete confirmation modal
@@ -151,10 +166,23 @@ function saveEditDangerZone (){
         data: JSON.stringify(dangerZone),
         success: function (response){
             $('#ediDangerZoneModal').modal('hide');
+            clearMap();
             displayDangerZoneTable();
         },
         error: function (response){
             $('#msg-edit-zone').text("Đã có lỗi xảy ra, vui lòng thử lại sau")
         }
     })
+}
+function clearMapAfterShowModal(){
+    clearAddModal();
+    limit = 0;
+    if (userMarker != null){
+        map.removeLayer(userMarker);
+        editMap.removeLayer(userMarker);
+    }
+    if (userCircle != null){
+        map.removeLayer(userCircle);
+        editMap.removeLayer(userCircle);
+    }
 }

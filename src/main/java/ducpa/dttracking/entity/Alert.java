@@ -17,16 +17,19 @@ public class Alert {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private String description;
-    private Time startTime;
-    private Time endTime;
-    private String schedular;
     private Double latitude;
     private Double longitude;
-    private int range;
+    private int radius;
+    private String name;
+    private String description;
     private String type;
 
     @OneToMany(mappedBy = "alert", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<DeviceAlert> deviceAlertList;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private User user;
 }

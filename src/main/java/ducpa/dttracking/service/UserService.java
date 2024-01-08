@@ -1,7 +1,7 @@
 package ducpa.dttracking.service;
 
 import ducpa.dttracking.dto.UserDTO;
-import ducpa.dttracking.entity.DangerZone;
+import ducpa.dttracking.entity.Alert;
 import ducpa.dttracking.entity.Device;
 import ducpa.dttracking.entity.User;
 import ducpa.dttracking.repository.UserRepository;
@@ -13,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Random;
 
 @Service
 public class UserService {
@@ -61,13 +60,15 @@ public class UserService {
         });
         return devices;
     }
-    public List<DangerZone> getDngerZoneList(User user){
-        List<DangerZone> dangerZones = user.getDangerZones();
-        dangerZones.forEach(dangerZone -> {
-            dangerZone.setUser(null);
+    public List<Alert> getDngerZoneList(User user){
+        List<Alert> alerts = user.getAlerts();
+        alerts.forEach(alert -> {
+            alert.setUser(null);
+            alert.setDeviceAlertList(null);
         });
-        return dangerZones;
+        return alerts;
     }
+
     public boolean resetPassword(String email, String otp, String password){
         if (!otp.equalsIgnoreCase(optUtil.getOtp(email)))
             return false;

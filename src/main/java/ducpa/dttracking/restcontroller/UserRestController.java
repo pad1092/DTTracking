@@ -48,7 +48,7 @@ public class UserRestController {
 
     @PutMapping("/users/devices/{id}")
     public void update(@RequestParam("device") String deviceString,
-                       @RequestParam("imageFile") MultipartFile imageFile,
+                       @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
                        Authentication authentication){
         Device device = utilService.stringToDevice(deviceString);
         User user = utilService.getUserByRequest(authentication);
@@ -58,7 +58,7 @@ public class UserRestController {
 
     @PostMapping("/users/devices/active")
     public ResponseEntity<?> activeDevice(@RequestParam("device") String deviceString,
-                                          @RequestParam("imageFile") MultipartFile imageFile,
+                                          @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
                                           Authentication authentication){
         Device device = utilService.stringToDevice(deviceString);
         User user = utilService.getUserByRequest(authentication);
@@ -90,10 +90,10 @@ public class UserRestController {
     @GetMapping("/users")
     public ResponseEntity<?> getUserProfile(Authentication authentication){
         User user = utilService.getUserByRequest(authentication);
-        user.setDangerZones(null);
         user.setUserDevices(null);
+        user.setAlerts(null);
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
-                .body(utilService.getUserByRequest(authentication));
+                .body(user);
     }
     @PutMapping("/users")
     public ResponseEntity<?> updateUserProfile(Authentication authentication, @RequestBody User user){

@@ -31,6 +31,7 @@ $(document).ready(function () {
     // Handle click event for the "Add Item" button
     $('#add-btn').click(function () {
         $('#msg-erorr').text('');
+        clearMapAfterShowModal();
         coordinate = [];
         userMarker = null;
         userCircle = null;
@@ -125,6 +126,9 @@ function inputLimit(value){
     updateLimit();
 }
 function updateLimit(){
+    if (coordinate.length == 0) {
+        return;
+    }
     if (userCircle) {
         map.removeLayer(userCircle);
     }
@@ -181,6 +185,9 @@ function inputEditLimit(value){
     updateEditLimit();
 }
 function updateEditLimit(){
+    if (coordinate.length == 0) {
+        return;
+    }
     if (userCircle) {
         editMap.removeLayer(userCircle);
     }

@@ -26,5 +26,5 @@ public class User {
     private List<Device> userDevices;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<DangerZone> dangerZones;
+    private List<Alert> alerts;
 }

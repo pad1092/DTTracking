@@ -30,7 +30,7 @@ public class UtilService {
     private Cloudinary cloudinary;
 
     public String storageFile(MultipartFile file) {
-        if (!file.isEmpty()) {
+        if (file != null && !file.isEmpty()) {
             try {
                 Map uploadRes = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap());
                 return (String) uploadRes.get("url");
