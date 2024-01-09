@@ -7,20 +7,30 @@ $(document).ready(function (){
 
 
 function addDangerZone(){
-    $('#msg-add-zone').text('')
+    clearValidateOutlineAddModal();
 
     const itemName = $('#itemName').val();
     const itemDescription = $('#itemDescription').val();
+    const itemType = $('#itemType').val();
+    let validate = true;
     if (itemName.trim() == ''){
-        $('#msg-add-zone').text("Vui lòng nhập trường 'Tên'")
-        return;
+        $('#itemName').addClass('validate-border')
+        validate = false;
+    }
+    if (itemType == null){
+        $('#itemType').addClass('validate-border')
+        validate = false;
     }
     if (coordinate.length === 0){
-        $('#msg-add-zone').text('Vui lòng chọn vị trí')
-        return;
+        $('#alert-map').addClass('validate-border')
+        validate = false;
     }
     if (limit == 0){
-        $('#msg-add-zone').text('Bán kính phải lớn hơn 0')
+        $('#limitInput').addClass('validate-border')
+        validate = false;
+    }
+    if (validate == false){
+        $('#msg-add-zone').text('Vui lòng nhập đầy đủ các trường và bán kính phải lớn hơn 0.')
         return;
     }
     console.log(itemName, itemDescription, coordinate, limit)
@@ -29,7 +39,8 @@ function addDangerZone(){
         'description' : itemDescription,
         'latitude' : coordinate[0],
         'longitude' : coordinate[1],
-        'radius' : limit
+        'radius' : limit,
+        'type' : itemType
     }
     let url = API_URL + '/danger-zones';
     $.ajax({
@@ -48,13 +59,24 @@ function addDangerZone(){
         }
     })
 }
+function clearOutlineWarning(element){
+    element.removeClass('validate-border')
+}
 function clearMap(){
     map.removeLayer(userCircle);
     map.removeLayer(userMarker);
     editMap.removeLayer(userCircle);
     editMap.removeLayer(userMarker);
 }
+function clearValidateOutlineAddModal(){
+    $('#msg-add-zone').text('')
+    clearOutlineWarning($('#limitInput'));
+    clearOutlineWarning($('#itemName'));
+    clearOutlineWarning($('#itemType'));
+    clearOutlineWarning($('#alert-map'))
+}
 function clearAddModal(){
+    clearValidateOutlineAddModal();
     $('#searchInput').val('');
     $('#limitInput').val(0);
     $('#itemDescription').val('');
@@ -63,7 +85,9 @@ function clearAddModal(){
 function displayDangerZoneTable(){
     let url = API_URL + '/users/danger-zones'
     $.get(url, function (response){
+        $('#img-loading-tbl').css("display", "none");
         dangerZoneList = response;
+        console.log(dangerZoneList);
         renderTable();
     })
 }
@@ -77,6 +101,9 @@ function renderTable(){
                 <td>${dangerZone.name}</td>
                 <td>${dangerZone.description}</td>
                 <td>${dangerZone.radius}</td>
+                <td class="${dangerZone.type === "IN" ? "text-danger" : "text-primary"}">
+                    ${dangerZone.type === "IN" ? "Vùng nguy hiểm" : "Rời vị trí"}
+                </td>
                 <td class="d-flex justify-content-around">
                   <div class="d-inline-block mx-2 action-btn text-primary edit-btn" onclick="editDangerZone(${index})">
                     <i class="fa-solid fa-pen text-primary"></i>
@@ -93,6 +120,7 @@ function renderTable(){
 }
 function editDangerZone(index){
     clearMapAfterShowModal();
+    clearValidateEditModal();
     dangerZoneSelected = dangerZoneList[index];
 
     coordinate = [dangerZoneSelected.latitude, dangerZoneSelected.longitude];
@@ -102,6 +130,7 @@ function editDangerZone(index){
     $('#editItemName').val(dangerZoneSelected.name);
     $('#edit-limitInput').val(dangerZoneSelected.radius);
     $('#editItemDescription').text(dangerZoneSelected.description);
+    $('#editItemType').val(dangerZoneSelected.type);
 
     $('#ediDangerZoneModal').modal('show');
     console.log(`INDEX OF ROW ${index}`);
@@ -133,20 +162,26 @@ function deleteDangerZone(index){
     console.log(index);
 }
 function saveEditDangerZone (){
+
     $('#msg-edit-zone').text('')
 
     const itemName = $('#editItemName').val();
     const itemDescription = $('#editItemDescription').val();
+    let validate = true;
     if (itemName.trim() == ''){
-        $('#msg-add-zone').text("Vui lòng nhập trường 'Tên'")
-        return;
+        $('#editItemName').addClass('validate-border')
+        validate = false;
     }
     if (coordinate.length === 0){
-        $('#msg-edit-zone').text('Vui lòng chọn vị trí')
-        return;
+        $('#edit-alert-map').addClass('validate-border');
+        validate = false;
     }
     if (limit == 0){
-        $('#msg-edit-zone').text('Bán kính phải lớn hơn 0')
+        $('#edit-limitInput').addClass('validate-border')
+        validate = false;
+    }
+    if (validate == false){
+        $('#msg-edit-zone').text('Vui lòng nhập đầy đủ các trường và bán kính phải lớn hơn 0')
         return;
     }
     console.log(itemName, itemDescription, coordinate, limit)
@@ -156,7 +191,8 @@ function saveEditDangerZone (){
         'description' : itemDescription,
         'latitude' : coordinate[0],
         'longitude' : coordinate[1],
-        'radius' : limit
+        'radius' : limit,
+        'type' : $('#editItemType').val()
     }
     let url = API_URL + '/danger-zones';
     $.ajax({
@@ -174,6 +210,13 @@ function saveEditDangerZone (){
         }
     })
 }
+function clearValidateEditModal(){
+    $('#msg-edit-zone').text('');
+    $('#editItemName').removeClass('validate-border')
+    $('#edit-alert-map').removeClass('validate-border');
+    $('#edit-limitInput').removeClass('validate-border')
+}
+
 function clearMapAfterShowModal(){
     clearAddModal();
     limit = 0;

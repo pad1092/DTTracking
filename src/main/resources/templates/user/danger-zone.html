@@ -24,7 +24,7 @@
     <div class="navbar">
       <div class="header-left h-100">
         <a th:href="@{/home}" class="d-block h-100">
-          <h4 class="m-0 f-w-bold">DTTRACKING</h4>
+          <h4 class="m-0 f-w-bold mb-1">DTTRACKING</h4>
         </a>
       </div>
       <div class="header-right flex-1">
@@ -124,7 +124,7 @@
   </div>
 </div>
 <div class="body-wrapper">
-  <h6 class="pt-5 text-uppercase f-w-bold text-center text-navy mb-4" style="width: max-content;">
+  <h6 class="pt-5 text-uppercase f-w-bold mb-1 text-center text-navy mb-4" style="width: max-content;">
     Quản lý cảnh báo
     <i class="fa-solid fa-chevron-right mx-2" style="font-size: 12px;"></i>
     Vùng nguy hiểm
@@ -132,19 +132,28 @@
   <div class="wr-f-500 align-items-center" style="display:flex">
   </div>
   <span id="response-msg" class="text-warning d-inline-block"></span>
-  <div class="btn btn-success mt-4" id="add-btn">Thêm mới</div>
-  <div id="list-device" class="mt-4" style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;">
-    <table class="bg-light table table-hover border table-responsive-lg text-center" id="danger-zones-tbl">
+  <div class="btn btn-success mt" id="add-btn">Thêm mới</div>
+  <div id="list-device" class="tbl-wrapper mt-4" style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;">
+    <table class=" bg-light table table-hover border table-responsive-lg text-center table-striped" id="danger-zones-tbl">
       <thead class="bg-brown text-white">
       <tr>
-        <th scope="col" class="col-2">STT</th>
+        <th scope="col" class="col-1">STT</th>
         <th scope="col" class="col-2">Tên</th>
         <th scope="col" class="col-2">Mô tả</th>
         <th scope="col" class="col-2">Bán kính (mét)</th>
-        <th scope="col" class="col-2">Hành động</th>
+        <th scope="col" class="col-2">Loại cảnh báo</th>
+        <th scope="col" class="col-1">Hành động</th>
       </tr>
       </thead>
       <tbody>
+      <tr id="img-loading-tbl">
+        <th scope="row"></th>
+        <td></td>
+        <td></td>
+        <td><img th:src="@{/images/2ring-loading.svg}" style="width: 30px; filter: brightness(0.3);"/></td>
+        <td></td>
+        <td></td>
+      </tr>
 <!--      <tr>-->
 <!--        <th scope="row">1</th>-->
 <!--        <td>PTIT</td>-->
@@ -182,11 +191,21 @@
           <div class="d-flex w-100 mb-2">
             <div class="w-50 mr-2">
               <label for="itemName">Tên:</label>
-              <input type="text" class="form-control" id="editItemName" required>
+              <input type="text" class="form-control" id="editItemName" required placeholder="Nhập tên cảnh báo">
             </div>
             <div class="w-50 ml-2">
+              <label class="f-w-bold mb-1" for="editItemType">Loại cảnh báo:</label>
+              <select class="form-control" id="editItemType">
+                <option selected disabled>Chọn loại cảnh báo</option>
+                <option value="IN">[IN]  Vùng nguy hiểm</option>
+                <option value="OUT">[OUT] Rời khỏi vị trí</option>
+              </select>
+            </div>
+          </div>
+          <div class="d-flex w-100 mb-2">
+            <div class="w-100 ">
               <label for="itemDescription">Mô tả:</label>
-              <textarea class="form-control" id="editItemDescription" rows="1" required></textarea>
+              <textarea class="form-control" id="editItemDescription" rows="1" required placeholder="Nhập mô tả"></textarea>
             </div>
           </div>
           <div class="form-group mb-2">
@@ -228,25 +247,35 @@
         <form id="addItemForm">
           <div class="d-flex w-100 mb-2">
             <div class="w-50 mr-2">
-              <label for="itemName">Tên:</label>
-              <input type="text" class="form-control" id="itemName" required>
+              <label class="f-w-bold mb-1" for="itemName">Tên:</label>
+              <input type="text" class="form-control" id="itemName" required placeholder="Nhập tên cảnh báo">
             </div>
             <div class="w-50 ml-2">
-              <label for="itemDescription">Mô tả:</label>
-              <textarea class="form-control" id="itemDescription" rows="1" required></textarea>
+              <label class="f-w-bold mb-1" for="itemType">Loại cảnh báo:</label>
+              <select class="form-control" id="itemType">
+                <option selected disabled>Chọn loại cảnh báo</option>
+                <option value="IN">[IN]  Vùng nguy hiểm</option>
+                <option value="OUT">[OUT] Rời khỏi vị trí</option>
+              </select>
+            </div>
+          </div>
+          <div class="d-flex w-100 mb-2">
+            <div class="w-100">
+              <label class="f-w-bold mb-1" for="itemDescription">Mô tả:</label>
+              <textarea class="form-control" id="itemDescription" rows="1" required placeholder="Nhập mô tả"></textarea>
             </div>
           </div>
           <div class="form-group mb-2">
-            <label for="alert-map">Chọn vị trí</label>
+            <label class="f-w-bold mb-1" for="alert-map">Chọn vị trí</label>
             <div id="alert-map" style="height: 400px;" class="mb-b"></div>
           </div>
           <div class="d-flex justify-content-center mb-3">
             <div class="w-100 mr-2">
-              <label for="searchInput">Tìm vị trí</label>
+              <label class="f-w-bold mb-1" for="searchInput">Tìm vị trí</label>
               <input class="form-control d-inline-block" type="text" id="searchInput" placeholder="Nhập vị trí" onchange=searchLocation(value)>
             </div>
             <div class="w-100 ml-2">
-              <label for="limitInput">Phạm vi(mét)</label>
+              <label class="f-w-bold mb-1" for="limitInput">Phạm vi(mét)</label>
               <input class="form-control d-inline-block" type="number" id="limitInput" placeholder="Phạm phạm vi" oninput=inputLimit(value)>
             </div>
           </div>
@@ -265,7 +294,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Confirm Delete</h5>
+        <h5 class="modal-title">Xác nhận xóa</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>

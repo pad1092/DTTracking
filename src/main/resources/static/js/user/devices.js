@@ -12,6 +12,7 @@ function renderTableDevices(){
     method: 'GET',
     dataType: 'json',
     success: function(data) {
+      $('#img-loading-tbl').css("display", "none");
       // Clear existing rows
       $('#tbl-devices tbody').empty();
 

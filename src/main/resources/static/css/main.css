@@ -26,8 +26,37 @@ html {
     background-color: var(--text-primary);
     color: white;
 }
+.table td, .table th {
+    vertical-align: middle;
+}
+.table {
+    position: relative;
+}
+.table thead{
+    top: -1px;
+    position: sticky;
+}
+.table tbody tr:hover{
+    border-left: 2px solid #c0504c;
+    font-weight: 600;
+    /*animation: fade-in .04s ease-in-out;*/
+}
 .msg-response{
     visibility: hidden;
+}
+.tbl-wrapper::-webkit-scrollbar {
+    width: 4px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
 /* -------HEADER---------- */
 #header {
@@ -229,7 +258,15 @@ html {
     display: flex;
 }
 
-
+/*LIST TABLE*/
+.tbl-wrapper{
+    max-height: calc(64vh - 10px);
+    overflow-y: scroll;
+}
+/*VALIDATE*/
+.validate-border{
+    outline: 1px solid #ff6a00 !important;
+}
 /* -------ANIMATION------- */
 
 @keyframes java {

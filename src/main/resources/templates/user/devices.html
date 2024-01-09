@@ -129,8 +129,8 @@
         Danh sách
     </h6>
     <div class="btn btn-success" id="add-btn">Thiết bị mới</div>
-    <div id="list-device" class="mt-4" style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;">
-        <table class="bg-light table table-hover border table-responsive-xl text-center table-striped " id="tbl-devices">
+    <div id="list-device" class="mt-4 tbl-wrapper" style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;">
+        <table class="bg-light table table-hover border table-responsive-lg text-center table-striped " id="tbl-devices">
             <thead class="bg-brown text-white">
             <tr>
                 <th scope="col" class="col-1">STT</th>
@@ -143,24 +143,15 @@
             </tr>
             </thead>
             <tbody>
-<!--            <tr>-->
-<!--                <th scope="row">1</th>-->
-<!--                <td>0001</td>-->
-<!--                <td><img src="../images/logo.png" class="border border-dark" alt="" style=" width: 40px; height: 40px; border-radius: 50%;"></td>-->
-<!--                <td>Arduino</td>-->
-<!--                <td>Đồ án tốt nghiệp</td>-->
-<!--                <td>27/11/2023</td>-->
-<!--                <td class="d-flex justify-content-around">-->
-<!--                    <div class="d-inline-block mx-2 action-btn text-primary edit-btn">-->
-<!--                        <i class="fa-solid fa-pen text-primary"></i>-->
-<!--                        Sửa-->
-<!--                    </div>-->
-<!--                    <div class="d-inline-block mx-2 action-btn text-danger delete-btn" data-device-id="0001">-->
-<!--                        <i class="fa-solid fa-trash text-danger"></i>-->
-<!--                        Xóa-->
-<!--                    </div>-->
-<!--                </td>-->
-<!--            </tr>-->
+            <tr id="img-loading-tbl">
+                <th scope="row"></th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><img th:src="@{/images/2ring-loading.svg}" style="width: 30px; filter: brightness(0.3);"/></td>
+                <td></td>
+                <td></td>
+            </tr>
             </tbody>
         </table>
         <!-- Delete Confirmation Modal -->
@@ -168,7 +159,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Confirm Delete</h5>
+                        <h5 class="modal-title">Xác nhận xóa</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -197,23 +188,23 @@
                     <div class="modal-body">
                         <form id="editDeviceForm">
                             <div class="form-group">
-                                <label for="editDeviceId">ID:</label>
+                                <label class="f-w-bold" for="editDeviceId">ID:</label>
                                 <input type="text" class="form-control" id="editDeviceId" readonly>
                             </div>
                             <div class="form-group">
-                                <label for="editDeviceName">Tên thiết bị:</label>
+                                <label class="f-w-bold" for="editDeviceName">Tên thiết bị:</label>
                                 <input type="text" class="form-control" id="editDeviceName">
                             </div>
                             <div class="form-group">
-                                <label for="editDeviceDescription">Mô tả:</label>
+                                <label class="f-w-bold" for="editDeviceDescription">Mô tả:</label>
                                 <input type="text" class="form-control" id="editDeviceDescription">
                             </div>
                             <div class="form-group">
-                                <label for="editDeviceActiveDate">Active Date:</label>
+                                <label class="f-w-bold" for="editDeviceActiveDate">Active Date:</label>
                                 <input type="text" class="form-control" id="editDeviceActiveDate" readonly>
                             </div>
                             <div class="form-group">
-                                <label for="editImageInput">Ảnh minh họa:</label>
+                                <label class="f-w-bold" for="editImageInput">Ảnh minh họa:</label>
                                 <div class="w-100 d-flex justify-content-between align-items-center p-1 border">
                                     <input type="file" id="editImageInput" onchange="displayEditImage()">
                                     <div id="editImagePreview" class="d-inline-block">
@@ -247,19 +238,19 @@
                         <button type="button" class="btn btn-outline-primary btn-sm mb-2" id="upload-excel">Tải lên file Excel</button>
                         <form id="addDeviceForm">
                             <div class="form-group">
-                                <label for="addDeviceId">Mã ID trên thiết bị:</label>
+                                <label class="f-w-bold" for="addDeviceId">Mã ID trên thiết bị:</label>
                                 <input type="text" class="form-control" id="addDeviceId">
                             </div>
                             <div class="form-group">
-                                <label for="addDeviceName">Tên thiết bị:</label>
+                                <label class="f-w-bold" for="addDeviceName">Tên thiết bị:</label>
                                 <input type="text" class="form-control" id="addDeviceName">
                             </div>
                             <div class="form-group">
-                                <label for="addDeviceDescription">Mô tả:</label>
+                                <label class="f-w-bold" for="addDeviceDescription">Mô tả:</label>
                                 <input type="text" class="form-control" id="addDeviceDescription">
                             </div>
                             <div class="form-group">
-                                <label for="addImageInput">Ảnh minh họa:</label>
+                                <label class="f-w-bold" for="addImageInput">Ảnh minh họa:</label>
                                 <div class="w-100 d-flex justify-content-between align-items-center p-1 border">
                                     <input type="file" id="addImageInput" onchange="displayAddImage()">
                                     <div id="addImagePreview" class="d-inline-block">
