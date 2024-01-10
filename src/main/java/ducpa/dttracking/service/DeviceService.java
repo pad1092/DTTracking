@@ -1,6 +1,7 @@
 package ducpa.dttracking.service;
 
 import ducpa.dttracking.entity.Device;
+import ducpa.dttracking.entity.DeviceAlert;
 import ducpa.dttracking.entity.User;
 import ducpa.dttracking.repository.DeviceRepository;
 import org.json.JSONObject;
@@ -85,5 +86,22 @@ public class DeviceService {
 
     public List<Device> getAllByUser(User user){
         return deviceRepository.getAllByUserDevice(user);
+    }
+
+    public List<DeviceAlert> getListAlertOfDeviceByUserAndId(User user, String deviceID){
+        Device res =  user.getUserDevices()
+                .stream()
+                .filter(device -> device.getId().equalsIgnoreCase(deviceID))
+                .findFirst()
+                .orElse(null);
+        if (res == null){
+            return null;
+        }
+        List<DeviceAlert> deviceAlertList = res.getDeviceAlertList();
+        deviceAlertList.forEach(deviceAlert -> {
+            deviceAlert.setAlert(null);
+            deviceAlert.setDevice(null);
+        });
+        return deviceAlertList;
     }
 }

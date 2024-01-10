@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" >
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -10,11 +10,8 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <link rel="stylesheet" th:href="@{/css/common.css}">
   <link rel="stylesheet" th:href="@{/css/main.css}">
-  <link rel="stylesheet" th:href="@{/css/user/notification.css}">
-  <link rel="stylesheet" th:href="@{/css/date-picker.css}">
   <link rel="shortcut icon" th:href="@{/images/logo.png}" type="image/x-icon">
 </head>
 
@@ -131,92 +128,128 @@
   </h6>
   <div class="wr-f-500 align-items-center" style="display:flex">
   </div>
-
-</div>
-<!-- <div class="py-3" id="footer">
-    <div class="footer-wrapper">
+  <select id="device-slt" class="form-control w-25" onchange="changeSelectedDevice(value)">
+    <option value="" selected disabled>Chọn thiết bị</option>
+  </select>
+  <div class="mt-3">
+    <div id="list-device" class="tbl-wrapper mt-2" style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; max-height: 50vh;">
+      <table class=" bg-light table table-hover border table-responsive-lg text-center table-striped" id="alert-device-tbl">
+        <thead class="bg-brown text-white">
+        <tr>
+          <th scope="col" class="col-1">STT</th>
+          <th scope="col" class="col-2">Tên</th>
+          <th scope="col" class="col-2">Mô tả</th>
+          <th scope="col" class="col-2">Loại cảnh báo</th>
+          <th scope="col" class="col-2">Thời gian bắt đầu</th>
+          <th scope="col" class="col-2">Khoảng thời gian</th>
+          <th scope="col" class="col-1">Hành động</th>
+        </tr>
+        </thead>
+        <tbody>
+<!--        <tr>-->
+<!--           <th scope="row">1</th>-->
+<!--           <td>Kim Ánh</td>-->
+<!--           <td>Dayoff weekend</td>-->
+<!--           <td class="text-danger">-->
+<!--               Vùng nguy hiểm-->
+<!--           </td>-->
+<!--           <td>12AM</td>-->
+<!--           <td>12h30m</td>-->
+<!--           <td><i class="fa-regular fa-trash-can text-danger"></i></td>-->
+<!--       </tr>-->
+        </tbody>
+      </table>
+      <img id="loading-alert-device-tbl" th:src="@{/images/2ring-loading.svg}" class="m-auto pb-3"
+           style="width: 30px; filter: brightness(0.3); display: none"/>
+      <span class="text-center pb-3" id="alert-devcie-tbl-empty" style="display: none">
+        Thiết bị chưa được thiết lập cảnh báo
+      </span>
     </div>
-</div> -->
-<!-- Modal ADD-->
+    <div class="mt-3 d-flex justify-content-end">
+      <span id="addAlertBtn" class="btn btn-success disabled" onclick="openAddModal(event)">Thêm mới</span>
+    </div>
+  </div>
+</div>
+
+<!-- ADD MODAL -->
 <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable modal-dialog modal-lg modal-dialog-centered" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add Item</h5>
+      <div class="modal-header text-white">
+        <h5 class="modal-title text-center" id="exampleModalLabel">Thêm cảnh báo cho thiết bị</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <!-- Input fields for name and description -->
         <form id="addItemForm">
-          <div class="form-group">
-            <label for="itemName">Tên:</label>
-            <input type="text" class="form-control" id="itemName" required>
-          </div>
-          <div class="form-group">
-            <label for="itemDescription">Mô tả:</label>
-            <textarea class="form-control" id="itemDescription" rows="1" required></textarea>
-          </div>
-          <div class="form-group">
-            <label for="itemDescription">Thời gian bắt đầu:</label>
-            <input type="time" name="" id="sttime">
-            <label for="itemDescription">Thời gian kết thúc:</label>
-            <input type="time" name="" id="endtime">
-          </div>
-          <div class="form-group">
-            <label for="schedular">Lặp lại</label>
-            <select class="form-control" id="schedular">
-              <option value="onece">Một lần</option>
-              <option value="everyday">Hàng ngày</option>
-              <option value="2to6">Thứ 2 đến thứ 6</option>
-              <option value="7to8">Cuối tuần</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="list-result">Thiết bị</label>
-            <div class="">
-              <ul id="list-result" class="d-inline-block mx-2 mt-2 ">
-                <li deviceID="0001" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>
-                <li deviceID="0001" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>
-                <li deviceID="0001" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>
-                <li deviceID="0001" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>
-                <li deviceID="0001" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>
-                <li deviceID="0001" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>
-                <li deviceID="0001" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>
-                <li deviceID="0001" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>
-                <li deviceID="0001" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>
-                <li deviceID="0001" class="text-decoration-none list-unstyled px-2 py-1 mb-1 resule-item" onclick="selectDevice(this)">Device 1</li>
-              </ul>
+          <span class="f-w-bold my-1">Khoảng thời gian</span>
+          <div class="d-flex w-100 mb-3">
+            <div class="w-50 mx-2">
+              <label class="mb-1" for="time-imp">Thời gian bắt đầu</label>
+              <input type="time" class="form-control text-center" id="time-imp" onchange="changeTime(value)">
+            </div>
+            <div class="w-50 mx-2">
+              <label class="mb-1" >Kết thúc sau (giờ : phút)</label>
+              <div type="time" class="form-control d-flex">
+                <input class="w-50 h-100 pr-1 text-right" style="border: none; outline: none;" type="text"
+                       placeholder="giờ" id="inp-hour" onchange="inputHour(val)" oninput="inputHour(value)">:
+                <input class="w-50 h-100 pl-1 text-left" style="border: none; outline: none;"
+                       type="number" step="5" min="0" max="55" placeholder="phút" id="input-minute"
+                       oninput="inputMinute(value)" onchange="onchangeMinute(value)">
+              </div>
             </div>
           </div>
-          <div class="form-group">
-            <label for="list-result">Chọn vị trí</label>
-            <div id="alert-map" style="height: 400px;"></div>
-            <label for="searchInput">Tìm vị trí</label>
-            <input class="form-control d-inline-block" type="text" id="searchInput" placeholder="Nhập vị trí" onchange=searchLocation(value)>
-            <label for="limitInput">Phạm vi(mét)</label>
-            <input class="form-control d-inline-block" type="number" id="limitInput" placeholder="Phạm phạm vi" oninput=inputLimit(value)>
+          <span class="f-w-bold my-1">Bộ lọc tìm kiếm</span>
+          <div class="d-flex w-100 mb-1">
+            <div class="w-50 mx-2">
+              <label class="mb-1" for="inp-alert-name">Từ khóa</label>
+              <input id="inp-alert-name" type="text" class="form-control" placeholder="Nhập tên hoặc mô tả" oninput="searchAlert(value)">
+            </div>
+            <div class="w-50 mx-2">
+              <label class="mb-1" for="sl-alert-type" >Loại cảnh báo</label>
+              <select id="sl-alert-type" class="form-control" onchange="searchAlert(value)">
+                <option value="ALL" selected>Tất cả</option>
+                <option value="IN">Vùng nguy hiểm</option>
+                <option value="OUT">Rời vị trí</option>
+              </select>
+            </div>
           </div>
-          <span id="msg-erorr" class="text-danger mt-2"></span>
+          <div id="list-search-alert" class="tbl-wrapper mx-2 border-top mb-2" style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; height: 200px; font-size: 14px;">
+            <table class=" bg-light table table-hover border table-responsive-lg text-center table-striped" id="search-alert-tbl">
+              <thead class="bg-white">
+              <tr>
+                <th scope="col" class="col-1">STT</th>
+                <th scope="col" class="col-2">Tên</th>
+                <th scope="col" class="col-2">Mô tả</th>
+                <th scope="col" class="col-2">Loại cảnh báo</th>
+              </tr>
+              </thead>
+              <tbody>
+              <!-- <tr>
+                 <th scope="row">1</th>
+                 <td>Kim Ánh</td>
+                 <td>Dayoff weekend</td>
+                 <td class="text-danger">
+                     Vùng nguy hiểm
+                 </td>
+             </tr> -->
+              </tbody>
+            </table>
+            <img th:src="@{/images/2ring-loading.svg}" class="m-auto pb-3 d-none" style="width: 30px; filter: brightness(0.3);"/>
+            <span class="text-center" id="search-alert-empt" style="display: none">Không tìm thấy dữ liệu</span>
+          </div>
+          <span id="msg-add-zone" class="text-danger mt-2"></span>
         </form>
-        <button id="submit-btn" class="btn btn-primary mt-2">Thêm</button>
+        <div class="d-flex justify-content-end">
+          <button id="add-zone-btn" class="btn btn-primary mt-2 px-4" onclick="addAlertForDevice()">Lưu</button>
+        </div>
       </div>
     </div>
   </div>
-  <div th:replace="fragments :: profile-modal"></div>
 </div>
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"
-        integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"
-        integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script th:src="@{/js/main.js}"></script>
-<script th:src="@{/js/date-picker.js}"></script>
-<script th:src="@{/js/user/setup-alert.js}"></script>
-
+<script th:src="@{/js/user/alert-device.js}"></script>
 </body>
 
 </html>

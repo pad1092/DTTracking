@@ -257,7 +257,10 @@ html {
 .drop-down-menu.open {
     display: flex;
 }
-
+.row-selected{
+    background: #dda4a2 !important;
+    border-left: 3px solid var(--text-primary);
+}
 /*LIST TABLE*/
 .tbl-wrapper{
     max-height: calc(64vh - 10px);

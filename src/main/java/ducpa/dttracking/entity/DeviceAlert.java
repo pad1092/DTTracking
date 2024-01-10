@@ -3,6 +3,7 @@ package ducpa.dttracking.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.sql.Time;
 
 @Entity
 @AllArgsConstructor
@@ -27,4 +28,6 @@ public class DeviceAlert {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Alert alert;
+    private Time startTime;
+    private int duration;
 }

@@ -52,4 +52,13 @@ public class AlertRestController {
         service.deleteAlert(user, dangerZoneId);
         return ResponseEntity.ok("success");
     }
+
+    @GetMapping("/alerts")
+    public ResponseEntity<?> searchAlert(@RequestParam(value = "key", required = false, defaultValue = "") String keyword,
+                                        @RequestParam(value = "type", required = false, defaultValue = "ALL") String type,
+                                         @RequestParam(value = "deviceID", required = true) String deviceID,
+                                         Authentication authentication){
+        User user = utilService.getUserByRequest(authentication);
+        return ResponseEntity.ok(service.searchAlert(user, keyword, type, deviceID));
+    }
 }
